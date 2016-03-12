@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition>
+    <c:set var="theActivity" value="#{activityView.created}" />
+
+    <p:dialog id="EventTypeCreateDlg" widgetVar="EventTypeCreateDialog" modal="true" resizable="false" appendTo="@(body)" 
+              header="#{bundle.CreateEventTypeTitle} on #{activityView.selectedDay.dayName}">
+      <h:form id="EventTypeCreateForm">
+        <h:panelGroup id="display">
+          <p:panelGrid rendered="#{theActivity != null}">
+            <p:row>
+              <p:column colspan="1">
+                <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventname}" for="eventname" />
+
+              </p:column>
+              <p:column colspan="3">
+                <p:inputText size="70" maxlength="40" id="eventname" required="true" value="#{theActivity.name}" title="#{bundle.CreateEventTypeTitle_eventname}" requiredMessage="#{bundle.CreateEventTypeRequiredMessage_eventname}" />
+              </p:column>
+            </p:row>
+            <p:row>
+              <p:column>
+                <p:outputLabel value="Start Time" for="starttime" />
+              </p:column>
+              <p:column>
+                <p:calendar id="starttime" pattern="HH:mm" minHour="9" timeOnly="true" value="#{theActivity.startTime}" />
+              </p:column>
+              <p:column><p:outputLabel value="End Time" for="endtime" />
+              </p:column>
+              <p:column>
+                <p:calendar id="endtime" pattern="HH:mm" minHour="9" timeOnly="true" value="#{theActivity.endTime}" />
+              </p:column>
+            </p:row>
+            <p:row>
+              <p:column>
+                <p:outputLabel value="#{bundle.CreateEventTypeLabel_cost}" for="eventcost" />
+              </p:column>
+              <p:column>
+                <p:inputText id="eventcost" value="#{theActivity.cost}" >
+                  <f:convertNumber maxFractionDigits="2"
+                                   type="number" />
+                </p:inputText>
+              </p:column>
+              <p:column>
+                <p:outputLabel value="Consent Form" for="consent" />
+              </p:column>
+              <p:column>
+                <p:selectBooleanCheckbox id="consent" value="#{theActivity.consentRequired}" />
+              </p:column>
+            </p:row>
+            <p:row>
+              <p:column>
+                <p:outputLabel for="minyear" value="#{bundle.CreateEventTypeLabel_minyear}" />
+              </p:column>
+              <p:column>
+                <p:selectOneMenu id="minyear" 
+                                 effect="fade"
+                                 value="#{theActivity.minyear}" 
+                                 converter="minSchoolYeartConverter"
+                                 var="y"
+                                 style="width:125px">
+                  <f:selectItems value="#{schoolYearBean.minSchoolYears}" var="year"
+                                 itemLabel="#{schoolYearBean.getMinSchoolYearLabel(year)}" itemValue="#{year}"/>
+                  <p:column>
+                    #{schoolYearBean.getMinSchoolYearLabel(y)}
+                  </p:column>
+                </p:selectOneMenu>
+              </p:column>
+              <p:column>
+                <p:outputLabel for="maxyear" value="#{bundle.CreateEventTypeLabel_maxyear}" />
+              </p:column>
+              <p:column>
+                <p:selectOneMenu id="maxyear" 
+                                 effect="fade"
+                                 value="#{theActivity.maxyear}" 
+                                 converter="maxSchoolYeartConverter"
+                                 var="y"
+                                 style="width:125px">
+                  <f:selectItems value="#{schoolYearBean.maxSchoolYears}" var="year"
+                                 itemLabel="#{schoolYearBean.getMaxSchoolYearLabel(year)}" itemValue="#{year}"/>
+                  <p:column>
+                    #{schoolYearBean.getMaxSchoolYearLabel(y)}
+                  </p:column>
+                </p:selectOneMenu>
+              </p:column>
+            </p:row>
+            <p:row>
+              <p:column>
+                <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventdescription}" for="eventdescription" />
+              </p:column>
+              <p:column>
+                <p:inputTextarea id="eventdescription" value="#{theActivity.description}" rows="4" cols="50" maxlength="256" autoResize="false" />
+              </p:column>
+              <p:column>
+                <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventnotes}" for="eventnotes" />
+              </p:column>
+              <p:column>
+                <p:inputTextarea id="eventnotes" value="#{theActivity.notes}" rows="4" cols="50" maxlength="256" autoResize="false" />
+              </p:column>
+            </p:row>
+            <p:row>
+              <p:column>
+                <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventvenue}" for="eventvenue" />
+              </p:column>
+              <p:column colspan="3">
+                <p:inputTextarea id="eventvenue" value="#{theActivity.venue}" rows="4" cols="50" maxlength="128" autoResize="false" />
+              </p:column>
+            </p:row>
+            <p:row>
+              <p:column>
+                <p:outputLabel for="organisers" value="#{bundle.CreateEventTypeLabel_organiser}" />
+              </p:column>
+              <p:column colspan="3">
+                <!--p:selectManyMenu id="organisers" 
+                                  filter="true" 
+                                  filterMatchMode="contains"
+                                  value="#{theActivity.organisers}" 
+                                  converter="contactConverter"
+                                  var="c"
+                                  showCheckbox="true"
+                                  style="width:100%"
+                                  scrollHeight="200"-->
+                <p:selectCheckboxMenu id="organisers" 
+                                      value="#{theActivity.organisers}" 
+                                      label="Organisers" 
+                                      filter="true"
+                                      filterMatchMode="contains"
+                                      style="width: 85%"
+                                      converter="contactConverter">
+                  <f:selectItems value="#{contactMenuBean.contacts}" />
+                </p:selectCheckboxMenu>
+                <p:commandButton immediate="true" id="createButton" icon="ui-icon-plus" style="margin-top: 0px !important; margin-left: 5px"  value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
+              </p:column>
+            </p:row>
+          </p:panelGrid>
+          <p:commandButton actionListener="#{activityView.finaliseCreate}" value="#{bundle.Save}" update="display,:ActivityListForm:datalist,:growl" oncomplete="handleSubmit(args,'EventTypeCreateDialog');"/>
+          <p:commandButton value="#{bundle.Cancel}" immediate="true" onclick="PF('EventTypeCreateDialog').hide()"/>
+        </h:panelGroup>
+      </h:form>
+    </p:dialog>
+
+    <ui:include src="CreateContact.xhtml"/>
+
+  </ui:composition>
+</html>

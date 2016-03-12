@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+
+    <ui:define name="title">
+      <h:outputText value="#{bundle.ListEventTypeTitle}"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+      
+             <p:layout style="min-width:300px;min-height:200px;" >
+               <p:layoutUnit position="center">
+      <h:form id="EventTypeListForm">
+
+        <p:contextMenu for="datalist">
+          <p:menuitem icon="ui-icon-search" value="#{bundle.View}" update=":EventTypeViewForm" oncomplete="PF('EventTypeViewDialog').show()" />
+          <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" actionListener="#{eventTypeController.destroy}" update=":growl,datalist"  />
+        </p:contextMenu>
+
+        <p:panel header="#{bundle.ListEventTypeTitle}">
+          <p:dataTable id="datalist" value="#{eventTypeController.items}" var="item"
+                       selectionMode="single" selection="#{eventTypeController.selected}"
+                       paginator="true"
+                       rowKey="#{item.eventtypeid}"
+                       rows="10"
+                       rowsPerPageTemplate="10,20,30,40,50"
+                       >
+
+            <p:ajax event="rowSelect"   update="createButton viewButton editButton deleteButton :EventInstanceDetailsForm"/>
+            <p:ajax event="rowUnselect" update="createButton viewButton editButton deleteButton"/>
+
+            <p:column style="width:16px">
+              <p:rowToggler />
+            </p:column>
+            <p:column filterBy="#{item.eventname}" filterMatchMode="contains" sortBy="#{item.eventname}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventname}"/>
+              </f:facet>
+              <h:outputText value="#{item.eventname}"/>
+            </p:column>
+            <!--p:column>
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventdescription}"/>
+              </f:facet>
+              <h:outputText value="#{item.eventDescription}"/>
+            </p:column-->
+            <!--p:column>
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventnotes}"/>
+              </f:facet>
+              <h:outputText value="#{item.eventNotes}"/>
+            </p:column-->
+            <p:column style="width:64px">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventcost}"/>
+              </f:facet>
+              <h:outputText value="#{item.eventcost}">
+                <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+              </h:outputText>
+            </p:column>
+            <p:column style="width:80px" sortBy="#{item.eventminyear}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventminyear}" />
+              </f:facet>
+              <h:outputText value="#{schoolYearBean.getMinSchoolYearLabel(item.eventminyear)}"/>
+            </p:column>
+            <p:column style="width:80px" sortBy="#{item.eventmaxyear}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventmaxyear}" />
+              </f:facet>
+              <h:outputText value="#{schoolYearBean.getMaxSchoolYearLabel(item.eventmaxyear)}"/>
+            </p:column>
+            <p:column>
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_organiser}" />
+              </f:facet>
+              <ui:repeat value="#{item.organisers}" var="o" >
+                <h:outputText value="#{o.firstname} #{o.surname}" />
+                <h:outputText rendered="#{not empty o.email}" value=" e:#{o.email}" />
+                <h:outputText rendered="#{not empty o.phone}" value=" p:#{o.phone}" />
+                <br/>
+              </ui:repeat>
+            </p:column>
+
+            <p:rowExpansion>
+              <p:panelGrid>
+
+                <p:row>
+                  <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventdescription}:</p:column>
+                  <p:column colspan="5">#{item.eventDescription}</p:column>
+                </p:row>
+
+                <p:row>
+                  <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventnotes}:</p:column>
+                  <p:column colspan="5">#{item.eventNotes}</p:column>
+                </p:row>
+
+              </p:panelGrid>
+            </p:rowExpansion>
+
+            <f:facet name="footer">
+              <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{eventTypeController.prepareCreate}" update=":EventTypeCreateForm" oncomplete="PF('EventTypeCreateDialog').show()"/>
+              <p:commandButton id="viewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":EventTypeViewForm" oncomplete="PF('EventTypeViewDialog').show()" disabled="#{empty eventTypeController.selected}"/>
+              <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventTypeEditForm" oncomplete="PF('EventTypeEditDialog').show()" disabled="#{empty eventTypeController.selected}"/>
+              <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{eventTypeController.destroy}" update=":growl,datalist" disabled="#{empty eventTypeController.selected}"/>
+            </f:facet>
+          </p:dataTable>
+        </p:panel>
+      </h:form>
+               </p:layoutUnit>
+               <p:layoutUnit position="south" resizable="true" collapsible="true">
+      <h:form id="EventInstanceDetailsForm">
+              <p:panel header="Event Occurrences">
+          <p:dataTable id="occurrencelist" value="#{eventTypeController.selected.eventOccurrences}" var="item"
+                       selectionMode="single" 
+                       paginator="true"
+                       rowKey="#{item.eventoccurrenceid}"
+                       rows="10"
+                       rowsPerPageTemplate="10,20,30,40,50"
+                       >
+
+            <p:column filterBy="#{item.eventname}" filterMatchMode="contains" sortBy="#{item.eventname}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventname}"/>
+              </f:facet>
+              <h:outputText value="#{item.eventname}"/>
+            </p:column>
+             <p:column sortBy="#{item.eventname}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventname}"/>
+              </f:facet>
+              <h:outputText value="#{item.eventname}"/>
+            </p:column>
+         </p:dataTable>
+              </p:panel>
+        
+      </h:form>
+               </p:layoutUnit>
+             </p:layout>
+      <ui:include src="Create.xhtml"/>
+      <ui:include src="Edit.xhtml"/>
+      <ui:include src="View.xhtml"/>
+    </ui:define>
+  </ui:composition>
+
+</html>

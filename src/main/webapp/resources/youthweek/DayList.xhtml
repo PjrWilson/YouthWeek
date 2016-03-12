@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+  <!-- INTERFACE -->
+  <cc:interface>
+    <cc:attribute name="day" type="uk.org.wrington.youthweek.view.ActivityDay"/>
+    <cc:attribute name="tableid" type="java.lang.Integer"/>
+  </cc:interface>
+
+  <!-- IMPLEMENTATION -->
+  <cc:implementation>
+    <h:form>
+      <p:dataTable id="table_#{cc.id}" editable="true">
+        
+        <p:column headerText="Name" >
+          <p:cellEditor>
+            <f:facet name="output"><h:outputText value="hello"/></f:facet>
+            <f:facet name="input"><p:inputText style="width: 100%"/></f:facet>
+          </p:cellEditor>
+        </p:column>
+        <p:column headerText="Description" >
+          <p:cellEditor>
+            <f:facet name="output"><h:outputText value="hello"/></f:facet>
+            <f:facet name="input"><p:inputTextarea style="width: 100%"/></f:facet>
+          </p:cellEditor>
+        </p:column>
+      </p:dataTable>
+    </h:form>
+  </cc:implementation>
+</html>

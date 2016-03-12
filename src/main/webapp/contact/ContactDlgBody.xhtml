@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+  <ui:composition>
+    <p:panelGrid columns="2" rendered="#{theContact != null}">
+      <p:outputLabel value="#{bundle.CreateContactLabel_firstname}" for="firstname" />
+      <p:inputText size="55" maxlength="45" id="firstname" value="#{theContact.firstname}" title="#{bundle.CreateContactTitle_firstname}" required="true" requiredMessage="#{bundle.CreateContactRequiredMessage_firstname}" />
+      <p:outputLabel value="#{bundle.CreateContactLabel_surname}" for="surname" />
+      <p:inputText size="55" maxlength="45" id="surname" value="#{theContact.surname}" title="#{bundle.CreateContactTitle_surname}" required="true" requiredMessage="#{bundle.CreateContactRequiredMessage_surname}" />
+      <p:outputLabel value="#{bundle.CreateContactLabel_address}" for="address" />
+      <p:inputTextarea id="address" value="#{theContact.address}" rows="5" cols="40" maxlength="256" autoResize="false" />
+      <p:outputLabel value="#{bundle.CreateContactLabel_email}" for="email" />
+      <p:inputText size="55" maxlength="50" id="email" value="#{theContact.email}" title="#{bundle.CreateContactTitle_email}" required="false" validatorMessage="#{bundle.CreateContactValidator_email}" requiredMessage="#{bundle.CreateContactRequiredMessage_firstname}" >
+        <f:validateRegex
+          pattern="(^$|^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$)" />
+      </p:inputText>
+      <p:outputLabel value="#{bundle.CreateContactLabel_phone}" for="phone" />
+      <p:inputText size="55" maxlength="25" id="phone" value="#{theContact.phone}" title="#{bundle.CreateContactTitle_phone}" required="false" requiredMessage="#{bundle.CreateContactRequiredMessage_firstname}" />
+      <p:outputLabel value="#{bundle.CreateContactLabel_notes}" for="notes" />
+      <p:inputTextarea id="notes" value="#{theContact.notes}" rows="5" cols="40" maxlength="256" autoResize="false" />
+      <p:outputLabel value="Committee Member" for="committee" />
+      <p:selectBooleanCheckbox id="committee" value="#{theContact.committee}" />
+    </p:panelGrid>
+
+  </ui:composition>
+</html>

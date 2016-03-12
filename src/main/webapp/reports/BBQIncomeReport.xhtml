@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+    <f:metadata>
+      <f:viewAction action="#{extraItemReport.init()}"/>
+    </f:metadata>
+
+    <ui:define name="title">
+      <h:outputText value="BBQ Order/Income Report"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+      <p:layout>
+        <p:layoutUnit minSize="40"  collapsible="true" position="north">
+
+          <h:form>
+            <div style="text-align: right">
+              <p:commandButton id="refresh" icon="ui-icon-search" value="Search" actionListener="#{extraItemReport.init()}" update="reportBody">
+              </p:commandButton>
+              <p:commandButton id="print" icon="ui-icon-print" value="Print">
+                <p:printer target=":reportBody"/>
+              </p:commandButton>
+            </div>
+          </h:form>
+
+        </p:layoutUnit>
+
+        <p:layoutUnit position="center">
+          <p:outputPanel id="reportBody" style="border: none; margin: 0px; padding: 0px;">
+
+            <div class="reportTableContainer">
+              <div class="section group">
+                <div class="col span_3_of_3">
+                  <div class="reportHeader">
+                    <h2>#{reportHelperBean.reportTitlePrefix} - BBQ items &amp; income</h2>
+                  </div>
+                </div>
+              </div>
+              <!--tr>
+                <th style="text-align: left;border: 1px dotted">Day</th>
+                <th style="text-align: left;border: 1px dotted">Activities</th>
+              </tr-->
+              <div class="reportTable">
+                <div class="tableHeader">
+                  <div class="tableCol" style="width:40%">Name</div>
+                  <div class="tableCol rightAlign" style="width:15%">Cost/Item (£)</div>
+                  <div class="tableCol rightAlign" style="width:15%">Total Number Ordered</div>
+                  <div class="tableCol rightAlign" style="width:15%">Number Free</div>
+                  <div class="tableCol rightAlign" style="width:15%">Income (£)</div>
+                </div>
+                <ui:repeat value="#{extraItemReport.infoList}" var="item">
+                  <div class="tableRow">
+                    <div class="tableCol">#{item.item.name}</div>
+                    <div class="tableCol rightAlign">
+                      <h:outputText value="#{item.item.cost}">
+                        <f:convertNumber currencySymbol="" minFractionDigits="2" type="currency" />
+                      </h:outputText>
+                    </div>
+                    <div class="tableCol rightAlign">#{item.numberOrdered}</div>
+                    <div class="tableCol rightAlign">#{item.freeItems}</div>
+                    <div class="tableCol rightAlign">
+                      <h:outputText style="position: static; right: 0px" value="#{item.income}">
+                        <f:convertNumber currencySymbol="" minFractionDigits="2" type="currency" />
+                      </h:outputText>
+                    </div>
+                  </div>
+                </ui:repeat>
+                <div class="tableHeader" style=" border-top: double;border-bottom: double">
+                  <div class="tableCol leftAlign" style="width:40%">Totals</div>
+                  <div class="tableCol rightAlign" style="width:15%">-</div>
+                  <div class="tableCol rightAlign" style="width:15%">#{extraItemReport.summaryInfo.numberOrdered}</div>
+                  <div class="tableCol rightAlign" style="width:15%">#{extraItemReport.summaryInfo.freeItems}</div>
+                  <div class="tableCol rightAlign" style="width:15%">
+                    <h:outputText value="#{extraItemReport.summaryInfo.income}">
+                      <f:convertNumber currencySymbol="" minFractionDigits="2" type="currency" />
+                    </h:outputText>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </p:outputPanel>
+        </p:layoutUnit>
+      </p:layout>
+    </ui:define>
+
+  </ui:composition>
+</html>

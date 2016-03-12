@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+    <ui:define name="title">
+      <h:outputText value="Child/Activities Report"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+      <p:layout>
+        <p:layoutUnit minSize="40"  collapsible="true" position="north">
+
+          <h:form>
+            <div style="width: 80%; float: left">
+              <p:outputLabel for="surname" style="vertical-align: central;border: 0px solid" value="Surname: "/>
+              <p:inputText id="surname" value="#{childActivitiesReport.searchSurname}" size="30" style="vertical-align: middle;border: 0px solid"></p:inputText>
+              <p:spacer width="2px"/>
+              <p:outputLabel for="firstname" style="vertical-align: central;border: 0px solid" value="First Name: "/>
+              <p:inputText id="firstname" value="#{childActivitiesReport.searchFirstname}" size="30" style="vertical-align: middle;border: 0px solid"></p:inputText>
+              <p:spacer width="5px"/>
+              <p:selectBooleanCheckbox id="ks1" value="#{childActivitiesReport.searchKS1}" style="vertical-align: middle;border: 0px solid" itemLabel="KS1"></p:selectBooleanCheckbox>
+              <p:spacer width="2px"/>
+              <p:selectBooleanCheckbox id="ks2" value="#{childActivitiesReport.searchKS2}" style="vertical-align: middle;border: 0px solid" itemLabel="KS2"></p:selectBooleanCheckbox>
+              <p:spacer width="2px"/>
+              <p:selectBooleanCheckbox id="ks3" value="#{childActivitiesReport.searchKS3}" style="vertical-align: middle;border: 0px solid" itemLabel="KS3"></p:selectBooleanCheckbox>
+              <p:spacer width="2px"/>
+              <p:selectBooleanCheckbox id="ks4" value="#{childActivitiesReport.searchKS4}" style="vertical-align: middle;border: 0px solid" itemLabel="KS4"></p:selectBooleanCheckbox>
+              <p:spacer width="5px"/>
+            </div>
+            <div style="text-align: right">
+              <p:commandButton style="vertical-align: middle" process="@this,surname,firstname,ks1,ks2,ks3,ks4" id="refresh" icon="ui-icon-search" value="Search" actionListener="#{childActivitiesReport.init()}" update="reportBody">
+              </p:commandButton>
+              <p:commandButton immediate="true" style="vertical-align: middle" id="print" icon="ui-icon-print" value="Print">
+                <p:printer target=":reportBody"/>
+              </p:commandButton>
+            </div>
+          </h:form>
+
+        </p:layoutUnit>
+
+        <p:layoutUnit position="center">
+          <p:outputPanel id="reportBody" style="border: none; margin: 0px; padding: 0px;">
+
+            <ui:repeat value="#{childActivitiesReport.childList}" var="ccont" varStatus="status">
+              <div class="reportTableContainer">
+                <div class="section group">
+                  <!--p:graphicImage style="float: left;position:relative;top:0px;" library="images" name="NewLogoSmall.png"/-->
+                  <div style="width:20%">
+                    <img class="childlogo"/>
+                  </div>
+                  <div class=" span_3_of_3" style="position: relative;">
+                    <div class="childReportHeader" >
+                      <h2>#{reportHelperBean.reportTitlePrefix} - #{ccont.child.firstname} #{ccont.child.surname}</h2>
+                    </div>
+                  </div>
+                  <div style="width:20%"></div>
+                </div>
+
+                <div class="section group">
+                  <div class="col span_3_of_3">
+                    <div class="reportHeader">
+                      <h3>Activities</h3>
+                    </div>
+                    <div class="reportTable">
+                      <div class="tableHeader">
+                        <div class="tableCol" style="width: 15%">Time</div>
+                        <div class="tableCol" style="width: 20%">Activity</div>
+                        <div class="tableCol rightAlign" style="width: 2%"></div>
+                        <div class="tableCol" style="width: 20%">Organiser</div>
+                        <div class="tableCol rightAlign" style="width: 5%">Cost</div>
+                        <div class="tableCol rightAlign" style="width: 2%"></div>
+                        <div class="tableCol" style="width: 35%">Notes</div>
+                      </div>
+
+                      <ui:repeat value="#{reportHelperBean.days}" var="day">
+                        <h:panelGroup rendered="#{ccont.countActivities(day) > 0}">
+                          <div class="tableHeader dayTitle">
+                            <div class="tableCol">#{reportHelperBean.getDayNameAndDate(day)}</div>
+                            <div class="tableCol"></div>
+                            <div class="tableCol"></div>
+                            <div class="tableCol"></div>
+                            <div class="tableCol"></div>
+                            <div class="tableCol"></div>
+                            <div class="tableCol"></div>
+                          </div>
+
+                          <ui:repeat value="#{ccont.getActivities(day)}" var="info">
+                            <div class="tableRow" style="border-top:0px">
+                              <div class="tableCol"> 
+                                <h:outputText value="#{info.activity.startTime}">
+                                  <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+                                </h:outputText>
+                                -
+                                <h:outputText value="#{info.activity.endTime}">
+                                  <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+                                </h:outputText>
+                              </div>
+                              <div class="tableCol">
+                                <h:outputText value="#{ywNameHelper.formatActivityNameWithVenue(info.activity)}">
+                                  <f:convertNumber currencySymbol="" minFractionDigits="2" type="currency" />
+                                </h:outputText>
+                              </div>
+                              <div class="tableCol"></div>
+                              <div class="tableCol">#{ywNameHelper.formatContactName(info.activity.committeeMember, true, settings.showOrganiserEmail)}</div>
+                              <div class="tableCol rightAlign">
+                                <h:outputText value="#{info.activity.cost}">
+                                  <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                                </h:outputText>
+                              </div>
+                              <div class="tableCol"></div>
+                              <div class="tableCol">
+                                <h:outputText value="#{info.activity.notes}"/>
+                              </div>
+                            </div>
+                          </ui:repeat>
+                        </h:panelGroup>  </ui:repeat>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="section group">
+                  <div class="col span_2_of_3">
+                    <div class="reportHeader">
+                      <h3 style="margin:2px">Extras &amp; Total</h3>
+                    </div>
+                    <div class="reportTable">
+                      <div class="tableHeader">
+                        <div class="tableCol" style="width:10%">Name</div>
+                        <div class="tableCol" style="width:5%">Cost/Item</div>
+                        <div class="tableCol" style="width:5%">Quantity</div>
+                        <div class="tableCol rightAlign" style="width:5%">Total/Item</div>
+                      </div>
+
+                      <ui:repeat value="#{ccont.getExtras()}" var="extra">
+                        <div class="tableRow">
+
+                          <div class="tableCol">#{extra.item.name}</div>
+                          <div class="tableCol">
+                            <h:outputText value="#{extra.item.cost}">
+                              <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                            </h:outputText>
+                          </div>
+                          <div class="tableCol">#{extra.itemCount}</div>
+                          <div class="tableCol" style="text-align:right">
+                            <h:outputText value="#{extra.cost}">
+                              <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                            </h:outputText>
+                          </div>
+                        </div>
+                      </ui:repeat>
+                      <div class="tableRow">
+                        <div class="tableCol">Admin Charge</div>
+                        <div class="tableCol"></div>
+                        <div class="tableCol">1</div>
+                        <div class="tableCol" style="text-align:right">
+                          <h:outputText value="#{ccont.childAdminFee}">
+                            <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                          </h:outputText>
+                        </div>
+                      </div>
+                      <div class="tableRow">
+                        <div class="tableCol">Activities Total</div>
+                        <div class="tableCol"></div>
+                        <div class="tableCol"></div>
+                        <div class="tableCol" style="text-align:right">
+                          <h:outputText value="#{ccont.activitiesTotal}">
+                            <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                          </h:outputText>
+                        </div>
+                      </div>
+                      <div class="tableHeader">
+                        <div class="tableCol">Total Charge</div>
+                        <div class="tableCol"></div>
+                        <div class="tableCol"></div>
+                        <div class="tableCol" style="text-align:right">
+                          <h:outputText value="#{ccont.childTotal}">
+                            <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                          </h:outputText>
+                        </div>
+                      </div>
+                    </div>
+                    <!--div class="actheader">
+                      <h3 style="margin:2px">Total Charge</h3>
+                    </div>
+                    <table style="width:100%" class="reference">
+                    <thead>
+                    <tr class="header">
+                      <th style="width:10%">Activities</th>
+                      <th style="width:5%">BBQ</th>
+                      <th style="width:5%">Admin Charge</th>
+                      <th style="text-align:right;width:5%">Total</th>
+                    </tr>
+                    </head>
+                    <tr>
+                      <td>£86.50</td>
+                      <td>£3.50</td>
+                      <td>£4.00</td>
+                      <td style="text-align:right">£94.00</td>
+                    </tr>
+                    </table-->
+                  </div>
+
+                  <div class="col span_2_of_3">
+                    <div class="reportHeader" style="border-bottom: 1px solid">
+                      <h3 style="margin:2px;">#{settings.reportMessageHeader}</h3>
+                    </div>
+                    <div style="margin:2px;">
+                      <h:outputText escape="false" value="#{settings.reportMessage}" />
+                    </div>
+                  </div>
+                </div>
+                <div class="break-place-holder">
+                </div>
+              </div>
+
+              <h:panelGroup rendered="#{not status.last}">
+                <div class="break"></div>
+              </h:panelGroup>
+            </ui:repeat>
+
+
+          </p:outputPanel>
+        </p:layoutUnit>
+      </p:layout>
+    </ui:define>
+
+  </ui:composition>
+</html>

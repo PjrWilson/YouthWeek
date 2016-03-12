@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+  <ui:composition>
+    <p:overlayPanel widgetVar="ScheduleEditor" 
+                    id="schedulePanel" 
+                    dismissable="false" 
+                    showCloseIcon="true"
+                    showEffect="blind" 
+                    hideEffect="explode" 
+                    dynamic="true" 
+                    style="width:1000px; z-index: 0"
+                    for=":ChildListForm:datalist:editScheduleButton"
+                    my="center center"
+                    appendToBody="true">
+      <h:form id="ScheduleEditorForm">
+        <p:panel header="Edit details for #{scheduleWizard.selected.firstname}">
+          <p:wizard widgetVar="wiz" flowListener="#{scheduleWizard.handleFlow}">
+            <p:tab id="activities" title="Select Activities" titleStyle="font-size: 12px">
+              <p:panelGrid columns="1" >
+                <p:dataTable id="ActivitiesTable" 
+                             widgetVar="ActivitiesTable"
+                             rows="15" 
+                             paginator="true"
+                             selection="#{scheduleWizard.selectedActivities}"
+                             value="#{scheduleWizard.childActivities}"
+                             rowKey="#{item.activityid}"
+                             var="item"
+                             style="margin-bottom:0">
+                  <p:column selectionMode="multiple" styleClass="#{item.consentRequired == true ? 'consentRequired' : null}" style="width:16px;text-align:center"/>
+                  <p:column filterBy="#{item.activityDay}"  filterMatchMode="equals" sortBy="#{item.activityDay}">
+                    <f:facet name="header">
+                      <h:outputText value="Day"/>
+                    </f:facet>
+                    <f:facet name="filter">
+                      <p:selectOneMenu onchange="PF('ActivitiesTable').filter()">
+                        <f:converter converterId="javax.faces.Integer" />
+                        <f:selectItem itemLabel="All" itemValue="" />
+                        <f:selectItem itemLabel="Monday" itemValue="1" />
+                        <f:selectItem itemLabel="Tuesday" itemValue="2" />
+                        <f:selectItem itemLabel="Wednesday" itemValue="3" />
+                        <f:selectItem itemLabel="Thursday" itemValue="4" />
+                        <f:selectItem itemLabel="Friday" itemValue="5" />
+                      </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{dayLabelBean.getDayLabel(item.activityDay)}"/>
+                  </p:column>
+                  <p:column filterBy="#{item.name}" filterMatchMode="contains" sortBy="#{item.name}">
+                    <f:facet name="header">
+                      <h:outputText value="#{bundle.ListEventTypeTitle_eventname}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.name}"/>
+                  </p:column>
+                  <p:column style="width:64px">
+                    <f:facet name="header">
+                      <h:outputText value="#{bundle.ListEventTypeTitle_eventcost}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.cost}">
+                      <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                    </h:outputText>
+                  </p:column>
+                  <p:column style="width: 90px">
+                    <f:facet name="header">
+                      <h:outputText value="Years"/>
+                    </f:facet>
+                    <h:outputText value="#{schoolYearBean.getMinSchoolYearLabel(item.minyear)} - #{schoolYearBean.getMaxSchoolYearLabel(item.maxyear)}"/>
+                  </p:column>
+                </p:dataTable>
+              </p:panelGrid>
+            </p:tab>
+
+            <p:tab id="details" title="Set Details" titleStyle="font-size: 12px">
+              <p:panelGrid columns="1" >
+                <p:dataTable id="ActivityEntriesTable" 
+                             widgetVar="ActivityEntriesTable"
+                             rows="15" 
+                             paginator="true"
+                             value="#{scheduleWizard.activityEntries}"
+                             rowKey="#{item.activity.activityid}"
+                             var="item"
+                             style="margin-bottom:0">
+                  <p:column filterBy="#{item.activity.activityDay}" 
+                            filterMatchMode="equals" 
+                            sortBy="#{item.activity.activityDay}">
+                    <f:facet name="header">
+                      <h:outputText value="Day"/>
+                    </f:facet>
+                    <f:facet name="filter">
+                      <p:selectOneMenu onchange="PF('ActivityEntriesTable').filter()">
+                        <f:converter converterId="javax.faces.Integer" />
+                        <f:selectItem itemLabel="All" itemValue="" />
+                        <f:selectItem itemLabel="Monday" itemValue="1" />
+                        <f:selectItem itemLabel="Tuesday" itemValue="2" />
+                        <f:selectItem itemLabel="Wednesday" itemValue="3" />
+                        <f:selectItem itemLabel="Thursday" itemValue="4" />
+                        <f:selectItem itemLabel="Friday" itemValue="5" />
+                      </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{dayLabelBean.getDayLabel(item.activity.activityDay)}"/>
+                  </p:column>
+                  <p:column filterBy="#{item.activity.name}" 
+                            filterMatchMode="contains" 
+                            sortBy="#{item.activity.name}">
+                    <f:facet name="header">
+                      <h:outputText value="#{bundle.ListEventTypeTitle_eventname}"/>
+                    </f:facet>
+                    <h:outputText value="#{item.activity.name}"/>
+                  </p:column>
+                  <p:column style="width:64px">
+                    <f:facet name="header">
+                      <h:outputText value="Consent Form Signed"/>
+                    </f:facet>
+                    <h:outputText value="#{item.consentFormSigned}" />
+                  </p:column>
+                  <p:column style="width: 90px">
+                    <f:facet name="header">
+                      <h:outputText value="Provide Help"/>
+                    </f:facet>
+                    <h:outputText value="#{item.canProvideHelp}"/>
+                  </p:column>
+                </p:dataTable>
+              </p:panelGrid>
+            </p:tab>
+
+            <p:tab id="extras" title="Select Extras" titleStyle="font-size: 12px">
+
+            </p:tab>
+          </p:wizard>
+        </p:panel>
+      </h:form>
+    </p:overlayPanel>
+  </ui:composition>
+</html>

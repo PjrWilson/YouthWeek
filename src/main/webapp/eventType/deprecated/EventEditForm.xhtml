@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+  <ui:composition>
+
+      <h:form id="EventTypeEditForm">
+        <h:panelGroup id="display" rendered="#{eventTypeController.selected != null  and eventTypeController.created == null}">
+          <p:panelGrid columns="2" >
+            <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventname}" for="eventname" />
+            <p:inputText size="55" maxlength="40" id="eventname" required="true" value="#{eventTypeController.selected.eventname}" title="#{bundle.CreateEventTypeTitle_eventname}" requiredMessage="#{bundle.CreateEventTypeRequiredMessage_eventname}" />
+            <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventdescription}" for="eventdescription" />
+            <p:inputTextarea id="eventdescription" value="#{eventTypeController.selected.eventDescription}" rows="4" cols="50" maxlength="256" autoResize="false" />
+            <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventnotes}" for="eventnotes" />
+            <p:inputTextarea id="eventnotes" value="#{eventTypeController.selected.eventNotes}" rows="4" cols="50" maxlength="256" autoResize="false" />
+            <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventvenue}" for="eventvenue" />
+            <p:inputTextarea id="eventvenue" value="#{eventTypeController.selected.eventVenue}" rows="4" cols="50" maxlength="128" autoResize="false" />
+            <p:outputLabel value="#{bundle.CreateEventTypeLabel_cost}" for="eventcost" />
+            <p:inputText id="eventcost" required="true" value="#{eventTypeController.selected.eventcost}" >
+              <f:convertNumber maxFractionDigits="2"
+                               type="number" />
+            </p:inputText>
+            <p:outputLabel for="minyear" value="#{bundle.CreateEventTypeLabel_minyear}" />
+            <p:selectOneMenu id="minyear" 
+                             effect="fade"
+                             value="#{eventTypeController.selected.eventminyear}" 
+                             converter="minSchoolYeartConverter"
+                             var="y"
+                             style="width:125px">
+              <f:selectItems value="#{schoolYearBean.minSchoolYears}" var="year"
+                             itemLabel="#{schoolYearBean.getMinSchoolYearLabel(year)}" itemValue="#{year}"/>
+              <p:column>
+                #{schoolYearBean.getMinSchoolYearLabel(y)}
+              </p:column>
+            </p:selectOneMenu>
+            <p:outputLabel for="maxyear" value="#{bundle.CreateEventTypeLabel_maxyear}" />
+            <p:selectOneMenu id="maxyear" 
+                             effect="fade"
+                             value="#{eventTypeController.selected.eventmaxyear}" 
+                             converter="maxSchoolYeartConverter"
+                             var="y"
+                             style="width:125px">
+              <f:selectItems value="#{schoolYearBean.maxSchoolYears}" var="year"
+                             itemLabel="#{schoolYearBean.getMaxSchoolYearLabel(year)}" itemValue="#{year}"/>
+              <p:column>
+                #{schoolYearBean.getMaxSchoolYearLabel(y)}
+              </p:column>
+            </p:selectOneMenu>
+            <p:outputLabel for="organisers" value="#{bundle.CreateEventTypeLabel_organiser}" />
+
+            <p:selectManyMenu id="organisers" 
+                              filter="true" 
+                              filterMatchMode="contains"
+                              value="#{eventTypeController.selected.organisers}" 
+                              converter="contactConverter"
+                              var="c"
+                              showCheckbox="true"
+                              style="width:300px">
+              <f:selectItems value="#{contactMenuBean.contacts}" var="contact" 
+                             itemLabel="#{contact.firstname} #{contact.surname}" itemValue="#{contact}" />
+
+              <p:column>
+                #{c.firstname} #{c.surname}
+              </p:column>
+              <p:column>
+                #{c.phone} #{c.email}
+              </p:column>
+            </p:selectManyMenu>
+
+           </p:panelGrid>
+          <p:commandButton rendered="#{eventTypeController.editing == null}" actionListener="#{eventTypeController.edit}" value="#{bundle.Edit}" update="display,:EventTypeListForm:datalist,:growl,:EventTypeCreateForm"/>
+          <p:commandButton rendered="#{eventTypeController.editing != null}" actionListener="#{eventTypeController.update}" value="#{bundle.Save}" update="display,:EventTypeListForm:datalist,:growl,:EventTypeCreateForm"/>
+          <p:commandButton value="#{bundle.Cancel}" immediate="true" update=":EventTypeCreateForm"/>
+        </h:panelGroup>
+      </h:form>
+
+  </ui:composition>
+</html>

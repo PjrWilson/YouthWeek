@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"     
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition>
+    <p:panelGrid rendered="#{theActivity != null}">
+      <p:row>
+        <p:column colspan="1">
+          <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventname}" for="eventname" />
+
+        </p:column>
+        <p:column colspan="3">
+          <p:inputText size="70" maxlength="40" id="eventname" required="true" value="#{theActivity.name}" title="#{bundle.CreateEventTypeTitle_eventname}" requiredMessage="#{bundle.CreateEventTypeRequiredMessage_eventname}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="Drop Off Time" for="starttime" />
+        </p:column>
+        <p:column>
+          <p:calendar id="starttime" locale="en_GB" timeZone="Europe/London" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.startTime}" />
+        </p:column>
+        <p:column><p:outputLabel value="Pick Up Time" for="endtime" />
+        </p:column>
+        <p:column>
+          <p:calendar id="endtime" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.endTime}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="Travel Time" for="travel" />
+        </p:column>
+        <p:column colspan="3">
+          <p:selectBooleanCheckbox id="travel" 
+                         value="#{theActivity.travelTimeRequired}"
+                         style="width: 50px">
+            <p:ajax immediate="true" update="actstarttime,actendtime"/>
+          </p:selectBooleanCheckbox>
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="Activity Start Time" for="actstarttime" />
+        </p:column>
+        <p:column>
+          <p:calendar disabled="#{theActivity.travelTimeRequired != true}" id="actstarttime" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.activityStartTime}" />
+        </p:column>
+        <p:column>
+          <p:outputLabel value="Activity End Time" for="actendtime" />
+        </p:column>
+        <p:column>
+          <p:calendar disabled="#{theActivity.travelTimeRequired != true}" id="actendtime" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.activityEndTime}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="#{bundle.CreateEventTypeLabel_cost}" for="eventcost" />
+        </p:column>
+        <p:column>
+          <p:inputText id="eventcost" value="#{theActivity.cost}" >
+            <f:convertNumber maxFractionDigits="2"
+                             type="number" />
+          </p:inputText>
+        </p:column>
+        <p:column>
+          <p:outputLabel value="Consent Form" for="consent" />
+        </p:column>
+        <p:column>
+          <p:selectBooleanCheckbox id="consent" value="#{theActivity.consentRequired}" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel for="minyear" value="#{bundle.CreateEventTypeLabel_minyear}" />
+        </p:column>
+        <p:column>
+          <p:selectOneMenu id="minyear" 
+                           effect="fade"
+                           value="#{theActivity.minyear}" 
+                           converter="minSchoolYeartConverter"
+                           var="y"
+                           style="width:125px">
+            <f:selectItems value="#{schoolYearBean.minSchoolYears}" var="year"
+                           itemLabel="#{schoolYearBean.getMinSchoolYearLabel(year)}" itemValue="#{year}"/>
+            <p:column>
+              #{schoolYearBean.getMinSchoolYearLabel(y)}
+            </p:column>
+          </p:selectOneMenu>
+        </p:column>
+        <p:column>
+          <p:outputLabel for="maxyear" value="#{bundle.CreateEventTypeLabel_maxyear}" />
+        </p:column>
+        <p:column>
+          <p:selectOneMenu id="maxyear" 
+                           effect="fade"
+                           value="#{theActivity.maxyear}" 
+                           converter="maxSchoolYeartConverter"
+                           var="y"
+                           style="width:125px">
+            <f:selectItems value="#{schoolYearBean.maxSchoolYears}" var="year"
+                           itemLabel="#{schoolYearBean.getMaxSchoolYearLabel(year)}" itemValue="#{year}"/>
+            <p:column>
+              #{schoolYearBean.getMaxSchoolYearLabel(y)}
+            </p:column>
+          </p:selectOneMenu>
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventdescription}" for="eventdescription" />
+        </p:column>
+        <p:column>
+          <p:inputTextarea id="eventdescription" value="#{theActivity.description}" rows="4" cols="50" maxlength="256" autoResize="false" />
+        </p:column>
+        <p:column>
+          <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventnotes}" for="eventnotes" />
+        </p:column>
+        <p:column>
+          <p:inputTextarea id="eventnotes" value="#{theActivity.notes}" rows="4" cols="50" maxlength="256" autoResize="false" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventvenue}" for="eventvenue" />
+        </p:column>
+        <p:column>
+          <p:inputTextarea id="eventvenue" value="#{theActivity.venue}" rows="4" cols="50" maxlength="128" autoResize="false" />
+        </p:column>
+        <p:column>
+          <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventnotesleader}" for="eventnotesleader" />
+        </p:column>
+        <p:column>
+          <p:inputTextarea id="eventnotesleader" value="#{theActivity.leaderNotes}" rows="4" cols="50" maxlength="256" autoResize="false" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="Committee Member:" for="committee" />
+        </p:column>
+        <p:column colspan="1">
+          <h:panelGroup>
+            <p:autoComplete id="committee" 
+                            dropdown="true"
+                            value="#{theActivity.committeeMember}" 
+                            completeMethod="#{contactController.completeCommitteeContact}"
+                            var="c" 
+                            itemLabel="#{c.firstname} #{c.surname}" 
+                            itemValue="#{c}" 
+                            converter="contactConverter" 
+                            forceSelection="true"
+                            emptyMessage="No matching Contacts"
+                            inputStyle="width:95%"
+                            style="width: 95%">
+              <p:column style="width:100%">
+                <h:outputText value="#{c.toString()}"/>
+              </p:column>
+            </p:autoComplete>
+            <p:commandButton immediate="true" id="createButton" icon="ui-icon-plus" style="margin-top: 5px !important; margin-left: 5px"  value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
+          </h:panelGroup>
+        </p:column>
+        <p:column>
+          <p:outputLabel for="organisers" value="Lead Adult(s)" />
+        </p:column>
+        <p:column colspan="1">
+          <h:panelGroup>
+            <p:autoComplete id="organisers"
+                            dropdown="true"
+                            multiple="true"
+                            value="#{theActivity.organisers}" 
+                            completeMethod="#{contactController.completeContact}"
+                            var="c" 
+                            itemLabel="#{c.firstname} #{c.surname}" 
+                            itemValue="#{c}" 
+                            converter="contactConverter" 
+                            forceSelection="true"
+                            styleClass="contactAutoSel"
+                            emptyMessage="No matching Contacts">
+              <p:column style="width:100%">
+                <h:outputText value="#{c.toString()}"/>
+              </p:column>
+            </p:autoComplete>
+            <p:commandButton immediate="true" id="createButton2" icon="ui-icon-plus" style="margin-top: 5px !important; margin-left: 5px"  value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
+          </h:panelGroup>
+        </p:column>
+      </p:row>
+    </p:panelGrid>
+  </ui:composition>
+</html>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+  <ui:composition>
+
+    <p:dialog id="ScheduleEditorDlg" 
+              widgetVar="ScheduleEditorDialog" 
+              modal="true" 
+              resizable="false" 
+              appendTo="@(body)"
+              header="Basket for #{childView.selected.firstname}"
+              width="1000"
+              >
+      <h:form id="ScheduleEditorForm" rendered="#{childView.selected != null}">
+
+        <p:panel >
+          <p:dataTable id="ActivitiesTable"
+                       widgetVar="ActivitiesTable"
+                       rows="0" 
+                       paginator="false"
+                       value="#{scheduleEditorBean.activityEntries}"
+                       rowKey="#{item.id}"
+                       var="item"
+                       editable="true"
+                       editMode="cell"
+                       scrollable="true"
+                       scrollHeight="220"
+                       reflow="true">
+            <f:facet name="header" >
+              Activities
+              <p:spacer width="10px"/>
+              <p:commandButton id="insertButton" 
+                               icon="ui-icon-plus" 
+                               value="Insert" 
+                               actionListener="#{scheduleEditorBean.prepareInsertActivity}" 
+                               update=":ScheduleEditorForm" 
+                               disabled="#{fn:length(scheduleEditorBean.childActivities) == 0}"/>
+            </f:facet>
+            <p:column headerText="Activity">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{item.activity.name}" />
+                </f:facet>
+                <f:facet name="input">
+                  <p:selectOneMenu value="#{item.activity}" 
+                                   var="a" 
+                                   panelStyle="width:600px" 
+                                   style="width:100%" 
+                                   filter="true"
+                                   filterMatchMode="contains">
+                    <p:ajax listener="#{scheduleEditorBean.onActivityChange}" update="ActivitiesTable,:ScheduleEditorForm:Totals" />
+                    <f:selectItem itemLabel="Select" itemValue="" />
+                    <f:selectItems value="#{scheduleEditorBean.childActivities}" var="activity" itemLabel="#{activity.name}" itemValue="#{activity}" />
+                    <p:column style="width: 20px">
+                      <h:outputText value="#{dayLabelBean.getDayLabel(a.activityDay)}"/>
+                    </p:column>
+                    <p:column>
+                      <h:outputText value="#{a.name}"/>
+                    </p:column>
+                  </p:selectOneMenu>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+
+            <p:column styleClass="#{item.consentRequired == true and item.consentFormSigned == false ? 'consentRequired' : null}" headerText="Consent Form" style="width:80px" >
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{item.consentRequired == true ? item.consentFormSigned == true ? 'Yes' : 'No' : 'N/A'}" />
+                </f:facet>
+                <f:facet name="input" >
+                  <p:selectBooleanCheckbox disabled="#{item.consentRequired == false}" value="#{item.consentFormSigned}" style="width:100%" >
+                    <p:ajax listener="#{scheduleEditorBean.consentCheckboxListener}" immediate="true" update="ActivitiesTable" />
+                  </p:selectBooleanCheckbox>
+                </f:facet>
+              </p:cellEditor>
+
+            </p:column>
+
+            <p:column headerText="Help" style="width:80px" >
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{item.canProvideHelp == true ? 'Yes' : 'No'}" />
+                </f:facet>
+                <f:facet name="input">
+                  <p:selectBooleanCheckbox value="#{item.canProvideHelp}" style="width:100%" >
+                    <p:ajax listener="#{scheduleEditorBean.consentCheckboxListener}" immediate="true" update="ActivitiesTable" />
+                  </p:selectBooleanCheckbox>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Cost" style="width:80px" >
+              <h:outputText value="#{item.activity.cost}">
+                <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+              </h:outputText>
+            </p:column>
+
+            <p:column style="width:32px;text-align: center">
+              <p:commandButton style="margin-top: 0 !important" actionListener="#{scheduleEditorBean.removeActivity(item)}" update="ActivitiesTable" icon="ui-icon-closethick" title="Delete">
+              </p:commandButton>
+            </p:column>
+
+            <f:facet name="footer">
+              Activities selected: #{scheduleEditorBean.basket.activityCount}. Cost 
+              <h:outputText value="#{scheduleEditorBean.basket.activityCost}">
+                <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+              </h:outputText>
+            </f:facet>
+          </p:dataTable>
+        </p:panel>
+        <p:panel>
+          <p:dataTable id="ExtrasTable"
+                       widgetVar="ExtrasTable"
+                       rows="0" 
+                       paginator="false"
+                       value="#{scheduleEditorBean.basket.extraItemEntries}"
+                       rowKey="#{item.id}"
+                       var="item"
+                       editable="true"
+                       editMode="cell"
+                       scrollable="true"
+                       scrollHeight="150"
+                       reflow="true">
+            <f:facet name="header" >
+              BBQ Items
+              <p:spacer width="10px"/>
+              <p:commandButton id="insertButton" 
+                               icon="ui-icon-plus" 
+                               value="Insert" 
+                               actionListener="#{scheduleEditorBean.prepareInsertExtraItem}" 
+                               update=":ScheduleEditorForm" 
+                               disabled="#{fn:length(scheduleEditorBean.extraItems) == 0}"/>
+            </f:facet>
+            <p:column headerText="Item">
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{item.item.name}" />
+                </f:facet>
+                <f:facet name="input">
+                  <p:selectOneMenu value="#{item.item}" var="a" panelStyle="width:400px" style="width:100%" filter="true">
+                    <p:ajax listener="#{scheduleEditorBean.onItemChange}" update="ExtrasTable,:ScheduleEditorForm:Totals" />
+                    <f:selectItem itemLabel="Select" itemValue="" />
+                    <f:selectItems value="#{scheduleEditorBean.extraItems}" var="extra" itemLabel="#{extra.name}" itemValue="#{extra}" />
+                    <p:column style="width: 80px">
+                      <h:outputText value="#{a.name}"/>
+                    </p:column>
+                  </p:selectOneMenu>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Item Cost" style="width:80px" >
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{item.unitCost}">
+                    <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+                  </h:outputText>
+                </f:facet>
+                <f:facet name="input" >
+                  <p:selectBooleanCheckbox value="#{item.freeItem}" style="width:100%" itemLabel="Free">
+                    <p:ajax listener="#{scheduleEditorBean.onItemChange}" update="ExtrasTable,:ScheduleEditorForm:Totals" />
+                  </p:selectBooleanCheckbox>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Count" style="width:80px" >
+              <p:cellEditor>
+                <f:facet name="output">
+                  <h:outputText value="#{item.itemCount}" />
+                </f:facet>
+                <f:facet name="input">
+                  <p:inputMask mask="9?999" value="#{item.itemCount}" slotChar=" " style="width:100%" >
+                    <p:ajax listener="#{scheduleEditorBean.onItemChange}" update="ExtrasTable,:ScheduleEditorForm:Totals" />
+                  </p:inputMask>
+                </f:facet>
+              </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Total Cost" style="width:80px" >
+              <h:outputText value="#{item.cost}">
+                <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+              </h:outputText>
+            </p:column>
+
+            <p:column style="width:32px;text-align: center">
+              <p:commandButton style="margin-top: 0 !important" actionListener="#{scheduleEditorBean.removeActivity(item)}" update="ExtrasTable" icon="ui-icon-closethick" title="Delete">
+              </p:commandButton>
+            </p:column>
+
+            <f:facet name="footer">
+            </f:facet>
+          </p:dataTable>
+        </p:panel>
+
+        <p:panelGrid columns="4" style="width: 100%" id="Totals">
+          <f:facet name="header">
+            Totals
+          </f:facet>
+          <h:panelGroup>
+            Waive
+            <p:outputLabel value="#{scheduleEditorBean.adminFee}">
+              <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+            </p:outputLabel>
+            Admin Fee
+            <p:selectBooleanCheckbox id="adminCheck" value="#{scheduleEditorBean.basket.noAdminFee}" itemLabel="" >
+              <p:ajax listener="#{scheduleEditorBean.consentCheckboxListener}" immediate="true" update="Totals" />
+            </p:selectBooleanCheckbox>
+          </h:panelGroup>
+          <p:outputLabel value="Total: " for="total" />
+          <h:outputText value="#{scheduleEditorBean.basket.basketTotal}" id="total">
+            <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+          </h:outputText>
+        </p:panelGrid>
+        <p:commandButton value="#{bundle.Save}" actionListener="#{scheduleEditorBean.save()}" update=":ChildListForm:datalist" oncomplete="handleSubmit(args,'ScheduleEditorDialog');"/>
+        <p:commandButton value="#{bundle.Cancel}" immediate="true" onclick="ScheduleEditorDialog.hide()"/>
+      </h:form>
+    </p:dialog>
+  </ui:composition>
+</html>

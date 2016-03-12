@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:youthweek="http://xmlns.jcp.org/jsf/composite/youthweek">
+
+  <ui:composition template="/template.xhtml">
+
+
+    <ui:define name="title">
+      <h:outputText value="#{bundle.ListEventTypeTitle}"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+
+      <h:form id="ActivtyDaysForm">
+
+        <p:tabView effect="fade" value="#{activityDayView.activityDays}" var="day" >
+           
+          <p:tab title="#{day.dayName}">
+              <youthweek:DayList day="#{day}" tableid="#{day.dayNumber}" />
+          </p:tab>
+        </p:tabView>
+      </h:form>
+
+    </ui:define>
+  </ui:composition>
+
+</html>

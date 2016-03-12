@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+
+    <ui:define name="title">
+      <h:outputText value="#{bundle.ListEventTypeTitle}"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+
+      <p:panelGrid style="width: 100%" styleClass="panelColumns">
+
+          <p:row>
+            <p:column style="width: 100px;">
+              <h:form id="ActivityDayForm">
+                <p:dataTable id="daylist"
+                             value="#{activityView.activityDays}" 
+                             var="day"
+                             selection="#{activityView.selectedDay}"
+                             selectionMode="single"
+                             rowKey="#{day.dayNumber}"
+                             styleClass="hide-column-names">
+
+                  <p:ajax event="rowSelect"   update=":ActivityListForm"/>
+                  <p:ajax event="rowUnselect" update=":ActivityListForm"/>
+
+                  <p:column>
+                    <h:outputText value="#{day.dayName}"/>
+                  </p:column>
+                </p:dataTable>
+              </h:form>
+            </p:column>
+            <p:column>
+              <ui:include src="ActivityList.xhtml" />
+            </p:column>
+
+          </p:row>
+        </p:panelGrid>
+    </ui:define>
+  </ui:composition>
+
+</html>
