@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -39,6 +40,10 @@ public class Settings implements Serializable {
   
   @ManagedProperty(value = "#{settingsController}")
   private SettingsController settingsController;
+  @EJB
+  private uk.org.wrington.youthweek.model.ExtraItemEntryFacade ejbExtraItemFacade;
+  @EJB
+  private uk.org.wrington.youthweek.model.ActivityEntryFacade ejbActivityFacade;
   
   @PostConstruct
   public void init() {
@@ -67,14 +72,19 @@ public class Settings implements Serializable {
     return null;
   }
   
-  public void setStartDate(Date startDate) {
+  public void setStartDate(Date startDate, boolean clearPreviousChoices) {
     this.startDate = LocalDate.fromDateFields(startDate);
     System.out.println("START DATE = " + this.startDate.toString());
     SettingEntry s = new SettingEntry();
     s.setKey("StartDate");
     s.setValue(String.valueOf(startDate.getTime()));
     settingsController.create(s);
-  }
+    
+    if (clearPreviousChoices) {
+      ejbActivityFacade.deleteAll();
+      ejbExtraItemFacade.deleteAll();
+    }
+  }  
   
   public Float getAdminFee() {
     if (adminFee == 0) {

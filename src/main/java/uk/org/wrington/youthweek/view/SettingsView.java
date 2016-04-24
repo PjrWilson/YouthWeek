@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import org.primefaces.event.SelectEvent;
 import uk.org.wrington.youthweek.controller.ExtraItemController;
 import uk.org.wrington.youthweek.model.ExtraItem;
 import uk.org.wrington.youthweek.model.util.JsfUtil;
@@ -33,7 +34,11 @@ public class SettingsView implements Serializable {
 
   private ExtraItem created = null;
   private ExtraItem selected = null;
-
+  private float mNewAdminFee = 0;
+  private Date mNewStartDate = null;
+  private boolean mClearChildChoices = true;
+  private boolean mDateHasChanged = false;
+  
 //  LocalDate startDate;
 //  Float adminFee;
   @PostConstruct
@@ -53,14 +58,19 @@ public class SettingsView implements Serializable {
   }
 
   public void setStartDate(Date startDate) {
+    mDateHasChanged = false;
+    // Just remember for now
     if (!startDate.equals(settings.getStartDate())) {
-      settings.setStartDate(startDate);
-      System.out.println("START DATE = " + startDate.toString());
-      SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-      JsfUtil.addSuccessMessage("Selected start date " + format.format(startDate));
+      System.out.println("Start date updated to " + startDate.toString());
+      mNewStartDate = startDate;
+      mDateHasChanged = true;
     }
   }
-
+  
+  public Boolean getDateHasChanged() {
+    return mDateHasChanged;
+  }
+  
   public Boolean getHideDelete() {
     return settings.getDisableDelete();
   }
@@ -77,19 +87,45 @@ public class SettingsView implements Serializable {
   }
 
   public void setAdminFee(Float adminFee) {
+    mNewAdminFee = adminFee;
+  }
+  
+  public Boolean getClearChildChoices() {
+    return mClearChildChoices;
+  }
+  
+  public void setClearChildChoices(Boolean clear) {
+    mClearChildChoices = clear;
+  }
+  
+  public void commitYearSettings() {
+    System.out.println("commitYearSettings");
+    if (!mNewStartDate.equals(settings.getStartDate())) {
+      
+      settings.setStartDate(mNewStartDate, mClearChildChoices);
+      System.out.println("START DATE = " + mNewStartDate.toString());
+      SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+      JsfUtil.addSuccessMessage("Selected start date " + format.format(mNewStartDate));
+      
+      if (mClearChildChoices) {
+        JsfUtil.addSuccessMessage("Activity & BBQ Selections cleared");
+      }
+    }
+    
     // Only put out message if its different.
-    if (settings.getAdminFee() == null || !adminFee.equals(settings.getAdminFee())) {
-      settings.setAdminFee(adminFee);
-      System.out.println("ADMIN FEE = " + adminFee);
+    if (settings.getAdminFee() == null || mNewAdminFee != settings.getAdminFee()) {
+      settings.setAdminFee(mNewAdminFee);
+      System.out.println("ADMIN FEE = " + mNewAdminFee);
       JsfUtil.addSuccessMessage("Admin fee set to " + String.format("£%.2f", settings.getAdminFee()));
     }
+    
   }
-
-//  public void onDateSelect(SelectEvent event) {
-//    // setStartDate((Date)event.getObject());
+    
+  public void onDateSelect(SelectEvent event) {
+//    setStartDate((Date)event.getObject());
 //    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 //    JsfUtil.addSuccessMessage("Selected start date " + format.format(event.getObject()));
-//  }
+  }
 //
 //  public void onFeeSelect() {
 //    // setStartDate((Date)event.getObject());

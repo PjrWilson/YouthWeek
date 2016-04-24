@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+    <ui:define name="title">
+      <h:outputText value="Child Contact Report"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+      <p:layout>
+        <p:layoutUnit minSize="40"  collapsible="true" position="north">
+
+          <h:form>
+            <div style="width: 80%; float: left">
+              <p:outputLabel for="surname" style="vertical-align: central;border: 0px solid" value="Surname: "/>
+              <p:inputText id="surname" value="#{childActivitiesReport.searchSurname}" size="30" style="vertical-align: middle;border: 0px solid"></p:inputText>
+              <p:spacer width="2px"/>
+              <p:outputLabel for="firstname" style="vertical-align: central;border: 0px solid" value="First Name: "/>
+              <p:inputText id="firstname" value="#{childActivitiesReport.searchFirstname}" size="30" style="vertical-align: middle;border: 0px solid"></p:inputText>
+              <p:spacer width="5px"/>
+              <p:selectBooleanCheckbox id="ks1" value="#{childActivitiesReport.searchKS1}" style="vertical-align: middle;border: 0px solid" itemLabel="KS1"></p:selectBooleanCheckbox>
+              <p:spacer width="2px"/>
+              <p:selectBooleanCheckbox id="ks2" value="#{childActivitiesReport.searchKS2}" style="vertical-align: middle;border: 0px solid" itemLabel="KS2"></p:selectBooleanCheckbox>
+              <p:spacer width="2px"/>
+              <p:selectBooleanCheckbox id="ks3" value="#{childActivitiesReport.searchKS3}" style="vertical-align: middle;border: 0px solid" itemLabel="KS3"></p:selectBooleanCheckbox>
+              <p:spacer width="2px"/>
+              <p:selectBooleanCheckbox id="ks4" value="#{childActivitiesReport.searchKS4}" style="vertical-align: middle;border: 0px solid" itemLabel="KS4"></p:selectBooleanCheckbox>
+              <p:spacer width="5px"/>
+            </div>
+            <div style="text-align: right">
+              <p:commandButton style="vertical-align: middle" process="@this,surname,firstname,ks1,ks2,ks3,ks4" id="refresh" icon="ui-icon-search" value="Search" actionListener="#{childActivitiesReport.init()}" update="reportBody">
+              </p:commandButton>
+              <p:commandButton immediate="true" style="vertical-align: middle" id="print" icon="ui-icon-print" value="Print">
+                <p:printer target=":reportBody"/>
+              </p:commandButton>
+            </div>
+          </h:form>
+
+        </p:layoutUnit>
+
+        <p:layoutUnit position="center">
+          <p:outputPanel id="reportBody" style="border: none; margin: 0px; padding: 0px;">
+
+            <div class="reportTableContainer">
+              <div class="section group">
+                <div class="col span_3_of_3">
+                  <div class="reportHeader">
+                    <h2>#{reportHelperBean.reportTitlePrefix} - Contacts</h2>
+                  </div>
+                </div>
+              </div>
+
+              <div class="reportTable">
+                <div class="tableHeader">
+                  <div class="tableCol" style="width: 20%">Child Name</div>
+                  <div class="tableCol rightAlign" style="width: 10%">School Year</div>
+                  <div class="tableCol" style="width: 10%"></div>
+                  <div class="tableCol" style="width: 30%">Contact Details</div>
+                  <div class="tableCol" style="width: 30%">Medical Info</div>
+                </div>
+                <ui:repeat value="#{childActivitiesReport.childList}" var="ccont" varStatus="status">
+                  <div class="tableRow" style="border-top:0px">
+                    <div class="tableCol">#{ccont.child.surname}, #{ccont.child.firstname}</div>
+                    <div class="tableCol rightAlign">#{schoolYearBean.getSchoolYearLabel(settings.getSchoolYearFor(ccont.child, 0))}</div>
+                    <div class="tableCol" style="width: 10%"></div>
+                    <div class="tableCol">#{ywNameHelper.formatContactNameWithEmergencyTel(ccont.child.parentContact)}</div>
+                    <div class="tableCol" style="white-space: pre-line"><h:panelGroup rendered="#{fn:length(ccont.child.medicalInfo) > 0}">#{ccont.child.medicalInfo}<br/></h:panelGroup>#{entry.child.specialNeeds}</div>
+                  </div>
+                </ui:repeat>
+
+              </div>
+
+            </div>
+
+
+          </p:outputPanel>
+        </p:layoutUnit>
+      </p:layout>
+    </ui:define>
+
+  </ui:composition>
+</html>

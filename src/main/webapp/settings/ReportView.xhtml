@@ -16,41 +16,8 @@
 
     <ui:define name="body">
 
-      <h:form id="settingsForm">
-        <p:panel toggleable="true" collapsed="true">
-          <f:facet name="header">
-            <p:outputLabel style="float: left" value="Basic"/>
-          </f:facet>
-          <p:panelGrid columns="2">
-            <p:outputLabel value="Start Date: " for="startDate" />
-            <p:calendar id="startDate" value="#{settingsView.startDate}" mask="true" pattern="dd/MM/yy" locale="en_GB" timeZone="Europe/London">
-            </p:calendar>
-            <p:outputLabel value="Admin Fee: " for="adminFee" />
-            <p:inputText id="adminFee" value="#{settingsView.adminFee}" >
-              <f:convertNumber maxFractionDigits="2"
-                               type="number" />
-            </p:inputText>
-            <p:outputLabel value="Hide Delete Buttons: " for="hideDelete" />
-            <p:inputSwitch id="hideDelete" onLabel="Yes" offLabel="No" value="#{settingsView.hideDelete}" />
-          </p:panelGrid>
-          <p:commandButton process="startDate,adminFee,hideDelete" 
-                           value="Save" 
-                           update=":growl confirmDeleteChildSchedule" 
-                           icon="ui-icon-check"
-                           style="margin-top: 5px !important"/>
-        </p:panel>
-      </h:form>
-      <h:form id="extrasForm">
-        <p:panel toggleable="true"  collapsed="true">
-          <f:facet name="header">
-            <p:outputLabel style="float: left" value="BBQ Items"/>
-          </f:facet>
-          <ui:include src="ItemList.xhtml" />
-        </p:panel>
-      </h:form>
-
       <h:form id="childReportMessageForm">
-        <p:panel toggleable="true"  collapsed="true">
+        <p:panel toggleable="true"  collapsed="false">
           <f:facet name="header">
             <p:outputLabel style="float: left" value="Child/Activities Report Settings"/>
           </f:facet>
@@ -71,7 +38,7 @@
       </h:form>
 
       <h:form id="bbqTicketsMessageForm">
-        <p:panel toggleable="true"  collapsed="true">
+        <p:panel toggleable="true"  collapsed="false">
           <f:facet name="header">
             <p:outputLabel style="float: left" value="Barbecue Tickets Message"/>
           </f:facet>
@@ -90,7 +57,7 @@
       </h:form>
 
       <h:form id="timetableForm">
-        <p:panel toggleable="true"  collapsed="true">
+        <p:panel toggleable="true"  collapsed="false">
           <f:facet name="header">
             <p:outputLabel style="float: left" value="Timetable Colours"/>
           </f:facet>
@@ -113,10 +80,6 @@
                            style="margin-top: 5px !important"/>
         </p:panel>
       </h:form>
-
-      <p:dialog id="confirmDeleteChildSchedule" widgetVar="confirmDeleteChildSchedule" visible="#{settingsView.yearChanged}">
-        
-      </p:dialog>
     </ui:define>
   </ui:composition>
 

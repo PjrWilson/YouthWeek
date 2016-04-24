@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Table(name = "CONTACT")
 @XmlRootElement
 @NamedQueries({
-  @NamedQuery(name = "Contact.findAll", query = "SELECT e FROM Contact e")})
+  @NamedQuery(name = "Contact.findAll", query = "SELECT e FROM Contact e ORDER BY e.surname ASC, e.firstname ASC")})
 public class Contact implements Serializable {
 
   private static final long serialVersionUID = 1L;

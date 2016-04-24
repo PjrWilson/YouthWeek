@@ -15,9 +15,11 @@
 
     <ui:define name="body">
       <h:form id="ContactListForm">
-        <p:contextMenu for="datalist">
+        <p:contextMenu for="datalist" id="contactContextMenu">
           <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ContactEditForm" oncomplete="PF('ContactEditDialog').show()" />
           <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" rendered="#{settings.disableDelete == false}" actionListener="#{contactController.destroy}" update=":growl,datalist"  />
+          <p:menuitem icon="ui-icon-plus" value="Add To Committee" rendered="#{contactController.selected.committee == false}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
+          <p:menuitem icon="ui-icon-minus" value="Take Off Committee" rendered="#{contactController.selected.committee == true}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
         </p:contextMenu>
         <!--p:panel -->
         <p:dataTable id="datalist" 
@@ -27,17 +29,18 @@
                      selectionMode="single" 
                      selection="#{contactController.selected}"
                      paginator="true"
+                     paginatorPosition="bottom"
                      rowKey="#{item.contactid}"
                      sortBy="#{item.surname}"
                      rows="25"
                      rowsPerPageTemplate="10,15,20,25,30,40,50"
-                     emptyMessage="#{bundle.ListContactEmpty}" >
+                     emptyMessage="#{bundle.ListContactEmpty}">
           <f:facet name="header">
             #{bundle.ListContactTitle}
           </f:facet>
 
-          <p:ajax event="rowSelect"   update="createButton editButton deleteButton"/>
-          <p:ajax event="rowUnselect" update="createButton editButton deleteButton"/>
+          <p:ajax event="rowSelect"   update="createButton editButton deleteButton :ContactListForm:contactContextMenu"/>
+          <p:ajax event="rowUnselect" update="createButton editButton deleteButton :ContactListForm:contactContextMenu"/>
 
           <p:column style="width:16px" styleClass="#{item.committee == true ? 'committee' : null}">
             <p:rowToggler />
@@ -67,7 +70,8 @@
             <h:outputText value="#{item.phone}"/>
           </p:column>
           <p:column style="width:150px" styleClass="#{item.committee == true ? 'committee' : null}"
-                    filterBy="#{item.committee}" headerText="Committee?" filterMatchMode="equals">
+                    filterBy="#{item.committee}" headerText="Committee?" filterMatchMode="equals"
+                    sortBy="#{item.committee}">
             <f:facet name="filter">
               <p:selectOneMenu onchange="PF('datalist').filter()">
                 <f:converter converterId="javax.faces.Boolean" />

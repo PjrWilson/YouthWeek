@@ -235,4 +235,13 @@ public class ContactController implements Serializable {
     return retContacts;
   }
 
+  public void toggleCommittee() {
+    String message = "Added " + selected.getFirstname() + " to Committee";
+    if (selected.getCommittee()) {
+      message = "Removed " + selected.getFirstname() + " from Committee";
+    }
+    selected.setCommittee(!selected.getCommittee());
+    persist(PersistAction.UPDATE, message);
+//    JsfUtil.addSuccessMessage("Changed Committee Status for " + selected.getFirstname());
+  }
 }

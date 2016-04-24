@@ -156,7 +156,7 @@ and open the template in the editor.
                       <ui:repeat value="#{activityLeaderReport.getEntries(activity)}" var="entry">
                         <div class="tableRow" style="border-top:0px">
                           <div class="tableCol">#{entry.child.firstname} #{entry.child.surname}#{entry.consentRequired and not entry.consentFormSigned ? ' *' : null}</div>
-                          <div class="tableCol middleAlign">#{schoolYearBean.getMinSchoolYearLabel(settings.getSchoolYearFor(entry.child, 0))}</div>
+                          <div class="tableCol middleAlign">#{schoolYearBean.getSchoolYearLabel(settings.getSchoolYearFor(entry.child, 0))}</div>
                           <div class="tableCol">#{ywNameHelper.formatContactNameWithEmergencyTel(entry.child.parentContact)}</div>
                           <div class="tableCol middleAlign">#{entry.canProvideHelp == true ? "Yes" : ""}</div>
                           <div class="tableCol" style="white-space: pre-line"><h:panelGroup rendered="#{fn:length(entry.child.medicalInfo) > 0}">#{entry.child.medicalInfo}<br/></h:panelGroup>#{entry.child.specialNeeds}</div>

@@ -19,6 +19,7 @@ and open the template in the editor.
               appendTo="@(body)"
               header="Activity/Food details for #{childView.selected.firstname}"
               width="1000"
+              style="overflow-y: auto; top: 5px;"
               >
       <h:form id="ScheduleEditorForm" rendered="#{childView.selected != null}">
 
@@ -75,7 +76,8 @@ and open the template in the editor.
                                   itemValue="#{activity}"
                                   forceSelection="true"
                                   emptyMessage="No matching Activities"
-                                  groupBy="#{scheduleEditorBean.getGroup(activity)}" >
+                                  groupBy="#{scheduleEditorBean.getGroup(activity)}" 
+                                  scrollHeight="500" >
                     <p:column>
                       <b>#{activity.name}</b>
                     </p:column>
@@ -138,7 +140,7 @@ and open the template in the editor.
               <p:commandButton style="margin: 0 !important" 
                                actionListener="#{scheduleEditorBean.removeActivity(item)}" 
                                update="ActivitiesTable,:ScheduleEditorForm:Totals" 
-                               icon="ui-icon-closethick" 
+                               icon="ui-icon-circle-close" 
                                title="Delete">
               </p:commandButton>
             </p:column>
@@ -180,7 +182,7 @@ and open the template in the editor.
                   <h:outputText value="#{item.item.name}" />
                 </f:facet>
                 <f:facet name="input">
-                  <p:selectOneMenu value="#{item.item}" var="a" panelStyle="width:400px" style="width:100%" filter="true">
+                  <p:selectOneMenu value="#{item.item}" var="a" panelStyle="width:400px" style="width:95%" filter="false">
                     <p:ajax listener="#{scheduleEditorBean.onItemChange}" update="ExtrasTable,:ScheduleEditorForm:Totals" />
                     <f:selectItem itemLabel="Select" itemValue="" />
                     <f:selectItems value="#{scheduleEditorBean.extraItems}" var="extra" itemLabel="#{extra.name}" itemValue="#{extra}" />
@@ -227,7 +229,7 @@ and open the template in the editor.
             </p:column>
 
             <p:column style="width:32px;text-align: center">
-              <p:commandButton style="margin-top: 0 !important" actionListener="#{scheduleEditorBean.removeExtraItem(item)}" update="ExtrasTable,:ScheduleEditorForm:Totals" icon="ui-icon-closethick" title="Delete">
+              <p:commandButton style="margin-top: 0 !important" actionListener="#{scheduleEditorBean.removeExtraItem(item)}" update="ExtrasTable,:ScheduleEditorForm:Totals" icon="ui-icon-circle-close" title="Delete">
               </p:commandButton>
             </p:column>
 

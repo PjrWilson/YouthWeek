@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+    <ui:define name="title">
+      <h:outputText value="#{bundle.SettingsTitle}"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+
+      <h:form id="settingsForm">
+        <p:panel>
+          <f:facet name="header">
+            <p:outputLabel style="float: left" value="Basic"/>
+          </f:facet>
+          <p:panelGrid columns="2">
+            <p:outputLabel value="Start Date: " for="startDate" />
+            <p:calendar id="startDate" value="#{settingsView.startDate}" mask="true" pattern="dd/MM/yy" locale="en_GB" timeZone="Europe/London">
+            </p:calendar>
+            <p:outputLabel value="Admin Fee: " for="adminFee" />
+            <p:inputText id="adminFee" value="#{settingsView.adminFee}" >
+              <f:convertNumber maxFractionDigits="2"
+                               type="number" />
+            </p:inputText>
+            <p:outputLabel value="Hide Delete Buttons: " for="hideDelete" />
+            <p:inputSwitch id="hideDelete" onLabel="Yes" offLabel="No" value="#{settingsView.hideDelete}" />
+          </p:panelGrid>
+          <p:commandButton process="startDate,adminFee,hideDelete" 
+                           value="Save" 
+                           update=":growl confirmDeleteChildSchedule" 
+                           icon="ui-icon-check"
+                           style="margin-top: 5px !important"/>
+        </p:panel>
+      </h:form>
+
+      <p:dialog id="confirmDeleteChildSchedule" widgetVar="confirmDeleteChildSchedule" visible="#{settingsView.yearChanged}">
+        
+      </p:dialog>
+    </ui:define>
+  </ui:composition>
+
+</html>

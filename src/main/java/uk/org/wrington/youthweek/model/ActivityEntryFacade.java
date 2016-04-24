@@ -29,8 +29,12 @@ public class ActivityEntryFacade extends AbstractFacade<ActivityEntry> {
   }
 
   public long countEntriesFor(Activity a) {
-    return (Long)getEntityManager().createNamedQuery("ActivityEntry.countEntries").
+    return (Long) getEntityManager().createNamedQuery("ActivityEntry.countEntries").
             setParameter("activityid", a.getActivityid()).getSingleResult();
+  }
+
+  public int deleteAll() {
+    return getEntityManager().createNamedQuery("ActivityEntry.deleteAll").executeUpdate();
   }
 
 }

@@ -148,7 +148,7 @@ and open the template in the editor.
           <p:outputLabel value="Committee Member:" for="committee" />
         </p:column>
         <p:column colspan="1">
-          <h:panelGroup>
+          <p:panelGrid style="padding: 0px">
             <p:autoComplete id="committee" 
                             dropdown="true"
                             value="#{theActivity.committeeMember}" 
@@ -160,19 +160,20 @@ and open the template in the editor.
                             forceSelection="true"
                             emptyMessage="No matching Contacts"
                             inputStyle="width:95%"
-                            style="width: 95%">
+                            style="width: 95%"
+                            scrollHeight="400">
               <p:column style="width:100%">
                 <h:outputText value="#{c.toString()}"/>
               </p:column>
             </p:autoComplete>
-            <p:commandButton immediate="true" id="createButton" icon="ui-icon-plus" style="margin-top: 5px !important; margin-left: 5px"  value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
-          </h:panelGroup>
+            <p:commandButton immediate="true" id="createButton" icon="ui-icon-plus" style="top: 4px !important; left: 1px"  value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
+          </p:panelGrid>
         </p:column>
         <p:column>
           <p:outputLabel for="organisers" value="Lead Adult(s)" />
         </p:column>
         <p:column colspan="1">
-          <h:panelGroup>
+          <p:panelGrid columns="3" styleClass="ui-noborder">
             <p:autoComplete id="organisers"
                             dropdown="true"
                             multiple="true"
@@ -184,13 +185,17 @@ and open the template in the editor.
                             converter="contactConverter" 
                             forceSelection="true"
                             styleClass="contactAutoSel"
-                            emptyMessage="No matching Contacts">
+                            emptyMessage="No matching Contacts"
+                            inputStyle="width:100%"
+                            style="width: 100%"
+                            scrollHeight="400">
               <p:column style="width:100%">
                 <h:outputText value="#{c.toString()}"/>
               </p:column>
             </p:autoComplete>
-            <p:commandButton immediate="true" id="createButton2" icon="ui-icon-plus" style="margin-top: 5px !important; margin-left: 5px"  value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
-          </h:panelGroup>
+            <p:spacer/>
+            <p:commandButton immediate="true" id="createButton2" icon="ui-icon-plus" style="top: 0px !important; bottom: 0px; height: 100%; left: 0px"  value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
+          </p:panelGrid>
         </p:column>
       </p:row>
     </p:panelGrid>

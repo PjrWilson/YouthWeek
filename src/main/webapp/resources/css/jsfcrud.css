@@ -16,6 +16,10 @@
   margin-top: 0px !important;
 }
 
+.ui-autocomplete-multiple-container {
+  display: inline-block;
+}
+
 .panelColumns td {
   vertical-align: top; 
 }

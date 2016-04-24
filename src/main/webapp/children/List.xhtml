@@ -19,7 +19,7 @@
         <p:contextMenu for="datalist">
           <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()"/>
           <p:menuitem icon="ui-icon-cart"   value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update="ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()"/>
-          <p:menuitem icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childController.destroy}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"/>
+          <p:menuitem icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childView.deleteSelected}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"/>
         </p:contextMenu>
 
         <p:dataTable id="datalist" 
@@ -28,6 +28,7 @@
                      selectionMode="single" 
                      selection="#{childView.selected}"
                      paginator="true"
+                     paginatorPosition="bottom"
                      rowKey="#{item.childid}"
                      sortBy="#{item.surname}"
                      rows="#{childView.rows}"
@@ -39,7 +40,7 @@
             <p:commandButton rendered="false" id="createButtonTop" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{childView.prepareCreate}" update=":ChildCreateForm" oncomplete="PF('ChildCreateDialog').show()"/>
             <p:commandButton rendered="false" id="editButtonTop"   icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()" disabled="#{empty childView.selected}"/>
             <p:commandButton rendered="false" id="editScheduleButtonTop" icon="ui-icon-cart" value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" disabled="#{empty childView.selected}"/>
-            <p:commandButton id="deleteButtonTop" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childController.destroy}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty childView.selected}"/>
+            <p:commandButton  id="deleteButtonTop" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childController.destroy}" update=":growl,datalist" rendered="false" disabled="#{empty childView.selected}"/>
             <p:commandButton rendered="false" id="refreshButtonTop" icon="ui-icon-refresh"  value="Refresh" actionListener="#{childController.refreshItems}" update="datalist" />
           </f:facet>
           <p:ajax event="rowSelect"   update="createButton createButtonTop editButton editButtonTop editScheduleButton editScheduleButtonTop deleteButton deleteButtonTop"/>
@@ -62,8 +63,21 @@
               <f:convertDateTime type="date" timeZone="Europe/London"/>
             </h:outputText>
           </p:column>
-          <p:column headerText="School Year" sortBy="#{item.dateOfBirth}" style="width: 100px">
-            <h:outputText value="#{schoolYearBean.getMinSchoolYearLabel(settings.getSchoolYearFor(item, 0))}" />
+          <p:column headerText="School Year" sortBy="#{item.dateOfBirth}" filterBy="#{settings.getSchoolYearFor(item, 0)}" 
+                    filterFunction="#{childView.filterBySchoolYear}" style="width: 100px" filterMatchMode="equals">
+            <f:facet name="filter">
+                <p:selectOneMenu onchange="PF('datalist').filter()">
+                    <f:converter converterId="javax.faces.Integer" />
+                    <f:selectItem itemLabel="All" itemValue="-1" />
+                    <f:selectItem itemLabel="KS1" itemValue="1" />
+                    <f:selectItem itemLabel="KS2" itemValue="2" />
+                    <f:selectItem itemLabel="KS3" itemValue="3" />
+                    <f:selectItem itemLabel="KS4" itemValue="4" />
+                    <f:selectItem itemLabel="KS5" itemValue="5" />
+                    <f:selectItem itemLabel="N/A" itemValue="6" />
+                </p:selectOneMenu>
+            </f:facet>            
+            <h:outputText value="#{schoolYearBean.getSchoolYearLabel(settings.getSchoolYearFor(item, 0))}" />
           </p:column>
           <p:column headerText="Activities" filterBy="#{fn:length(item.activities)}" filterFunction="#{childView.filterByActivityCount}" style="width: 85px">
             <f:facet name="filter">
@@ -98,7 +112,7 @@
             <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{childView.prepareCreate}" update=":ChildCreateForm" oncomplete="PF('ChildCreateDialog').show()"/>
             <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()" disabled="#{empty childView.selected}"/>
             <p:commandButton id="editScheduleButton" icon="ui-icon-cart" value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" disabled="#{empty childView.selected}"/>
-            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childController.destroy}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty childView.selected}"/>
+            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childView.deleteSelected}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty childView.selected}"/>
             <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{childController.refreshItems}" update="datalist" />
           </f:facet>
             <p:ajax event="rowDblselect"  listener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" />

@@ -31,18 +31,43 @@ public class StaticValues {
   }
 
   public static String getMenuLabel(Integer in) {
+    
+    String label = "";
     if (in != null) {
       switch (in) {
         case -1:
         case 99:
-          return "Any";
+          label = "Any";
+          break;
         case 0:
-          return "Reception";
+          label = "Reception";
+          break;
         default:
-          return in.toString();
+          label = in.toString();
+          break;
       }
     }
-    return "";
+    return label;
+  }
+
+  public static String getYearLabel(Integer in) {
+    
+    String label = "";
+    if (in != null) {
+      switch (in) {
+        case 0:
+          label = "Reception";
+          break;
+        default:
+          label = in.toString();
+          break;
+      }
+      // If > 13, not in school anymore
+      if (in > 13 || in < 0) {
+        label = "N/A";
+       }
+    }
+    return label;
   }
 
   public static String getDayLabel(Integer in) {

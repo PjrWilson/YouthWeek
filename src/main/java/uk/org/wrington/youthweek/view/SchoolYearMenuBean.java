@@ -34,4 +34,8 @@ public class SchoolYearMenuBean {
     return StaticValues.getMenuLabel(in);
   }
 
+  public String getSchoolYearLabel(Integer in) {
+    return StaticValues.getYearLabel(in);
+  }
+
 }

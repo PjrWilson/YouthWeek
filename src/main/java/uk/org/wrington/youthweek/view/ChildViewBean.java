@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import uk.org.wrington.youthweek.controller.ChildController;
+import uk.org.wrington.youthweek.controller.ContactController;
 import uk.org.wrington.youthweek.model.Child;
 
 /**
@@ -25,16 +26,19 @@ public class ChildViewBean implements Serializable {
   // The controller.
   @ManagedProperty(value = "#{childController}")
   private ChildController childController;
+  // Need to make sure this is created
+  @ManagedProperty(value = "#{contactController}")
+  private ContactController contactController;
 //  @ManagedProperty(value = "#{activityController}")
 //  private ActivityController activityController;
 //  @ManagedProperty(value = "#{settings}")
 //  private Settings settings;
-  
+
   private Child selected = null;
   private Child created = null;
 
   private int rows = 25;
-  
+
 //  @PostConstruct
 //  public void init() {
 //    // Create the days.
@@ -44,13 +48,20 @@ public class ChildViewBean implements Serializable {
 //    // Select first
 //    setSelectedDay(activityDays.get(0));
 //  }
-
   public void setChildController(ChildController cc) {
     this.childController = cc;
   }
 
   public ChildController getChildController() {
     return childController;
+  }
+
+  public void setContactController(ContactController cc) {
+    this.contactController = cc;
+  }
+
+  public ContactController getContactController() {
+    return contactController;
   }
 
   public void setSelected(Child child) {
@@ -86,17 +97,22 @@ public class ChildViewBean implements Serializable {
     childController.update(selected);
   }
 
+  public void deleteSelected() {
+    childController.destroy(selected);
+    selected = null;
+  }
+
   public void prepareScheduleEditor() {
     // The child to be edited is selected.
     System.out.println("Edit schedule for " + selected.getFirstname());
     // Update list of activities available to this child.
-   // childActivities = activityController.getItemsForSchoolYear(settings.getSchoolYearFor(selected, 0));
+    // childActivities = activityController.getItemsForSchoolYear(settings.getSchoolYearFor(selected, 0));
   }
-  
+
   public boolean filterByActivityCount(Object value, Object filter, Locale locale) {
-    Integer columnValue = (Integer)value;
-    Integer filterValue = (Integer)filter;
-    
+    Integer columnValue = (Integer) value;
+    Integer filterValue = (Integer) filter;
+
     switch (filterValue) {
       case -1:
         return true;
@@ -109,7 +125,31 @@ public class ChildViewBean implements Serializable {
     }
     return true;
   }
-  
+
+  public boolean filterBySchoolYear(Object value, Object filter, Locale locale) {
+    
+    Integer columnValue = (Integer) value;
+    Integer filterValue = (Integer) filter;
+
+    switch (filterValue) {
+      case -1:
+        // All
+        return true;
+      case 1:
+        return columnValue >= 0 && columnValue <= 2;
+      case 2:
+        return columnValue >= 3 && columnValue <= 6;
+      case 3:
+        return columnValue >= 7 && columnValue <= 9;
+      case 4:
+        return columnValue >= 10 && columnValue <= 11;
+      case 5:
+        return columnValue >= 12 && columnValue <= 13;
+      case 6:
+        return columnValue > 13;
+    }
+    return true;
+  }
 //  public String formatParentContact(Contact c) {
 //    String s = null;
 //    // Use firstname surname + email & emergency contact.
@@ -125,11 +165,11 @@ public class ChildViewBean implements Serializable {
 //   // System.out.println("Parent: " + s);
 //    return s;
 //  }
-  
+
   public int getRows() {
     return rows;
   }
-  
+
   public void setRows(int i) {
     System.out.println("Rows set to " + i);
     rows = i;

@@ -96,6 +96,14 @@ public class ActivityViewBean implements Serializable {
     return created;
   }
 
+  public void deleteSelected() {
+    if (selectedDay != null) {
+      Activity activity = selectedDay.getSelected();
+      activityController.destroy(activity);
+      selectedDay.setSelected(null);
+    }
+  }
+  
   public void finaliseCreate() {
     if (created != null) {
       ActivityViewDay day = activityDays.get(created.getActivityDay() - 1);

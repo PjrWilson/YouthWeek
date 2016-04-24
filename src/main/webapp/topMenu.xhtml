@@ -32,12 +32,18 @@ and open the template in the editor.
         </p:submenu>
         <p:menuitem value="BBQ Orders/Income" outcome="/reports/BBQIncomeReport" />
         <p:submenu label="Children">
+          <p:menuitem value="Contacts List" outcome="/reports/ChildContactReport" />
           <p:menuitem value="Activities List" outcome="/reports/ChildActivitiesReport" />
           <p:menuitem value="Barbecue Tickets" outcome="/reports/ChildBarbecueTicketsReport" />
           <p:menuitem value="Missing Consent Forms" outcome="/reports/ChildConsentFormReport" />
         </p:submenu>
       </p:submenu>
-      <p:menuitem value="Settings" outcome="/settings/SettingsView" icon="ui-icon-wrench" style="position: absolute; right: 45px" />
+      <p:submenu label="Settings" icon="ui-icon-gear" style="position: absolute; right: 45px">
+        <p:menuitem value="Setup Year" outcome="/settings/SetupYearView" icon="ui-icon-calendar" />
+        <p:menuitem value="View Settings" outcome="/settings/ViewSettingsView" icon="ui-icon-document" />
+        <p:menuitem value="BBQ Items" outcome="/settings/BBQView" icon="ui-icon-cart" />
+        <p:menuitem value="Report Settings" outcome="/settings/ReportView" icon="ui-icon-script" />
+      </p:submenu>
       <f:facet name="options">
         <p:graphicImage style="margin-top: -0px; margin-left: 0px; float: left" height="28" library="images" name="NewLogoSmall.png"/>
           <!--h:outputLabel style="font-size: medium" value="#{bundle.AppName}" /-->

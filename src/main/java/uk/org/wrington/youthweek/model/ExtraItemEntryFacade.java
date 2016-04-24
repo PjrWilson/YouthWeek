@@ -26,5 +26,8 @@ public class ExtraItemEntryFacade extends AbstractFacade<ExtraItemEntry> {
     public ExtraItemEntryFacade() {
         super(ExtraItemEntry.class);
     }
-    
+
+    public int deleteAll() {
+      return getEntityManager().createNamedQuery("ExtraItemEntry.deleteAll").executeUpdate();
+    }
 }

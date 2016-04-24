@@ -35,7 +35,9 @@ import javax.persistence.Table;
   @NamedQuery(name = "ActivityEntry.countEntriesForActivity", 
           query = "SELECT COUNT(e) FROM ActivityEntry e WHERE e.activity.activityid = :id"),
   @NamedQuery(name = "ActivityEntry.getEntriesForChildAndDay", 
-          query = "SELECT e FROM ActivityEntry e WHERE e.child.childid = :childid AND e.activity.activityday = :day ORDER BY e.activity.startTime ASC")})
+          query = "SELECT e FROM ActivityEntry e WHERE e.child.childid = :childid AND e.activity.activityday = :day ORDER BY e.activity.startTime ASC"),
+  @NamedQuery(name = "ActivityEntry.deleteAll", 
+          query = "DELETE FROM ActivityEntry")})
 public class ActivityEntry implements Serializable {
 
   private static final long serialVersionUID = 1L;

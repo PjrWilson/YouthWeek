@@ -15,13 +15,25 @@
 
       <p:outputPanel id="logoPanel" style="display:none; margin-top: 5%">
         <p:graphicImage style="display:block; margin: auto; " id="logo" name="NewLogo.png" library="images" />
+      </p:outputPanel>
+
+      <p:outputPanel id="wordingPanel" style="display:none; margin-top: 2%">
+        <p:graphicImage style="display:block; margin: auto; " id="logo-wording" name="Logo-Wording.png" library="images" />
         <div id="starttitle">
-          <h1>#{bundle.AppName}</h1>
+          <h1>w/c
+            <h:outputText value="#{settings.startDate}">
+              <f:convertDateTime dateStyle="short" type="date" />
+            </h:outputText>
+          </h1>
         </div>
       </p:outputPanel>
 
       <p:effect for="logoPanel" type="fade" event="load" delay="100">
         <f:param name="mode" value="'show'" />
+      </p:effect> 
+      <p:effect for="wordingPanel" type="slide" event="load" delay="200">
+        <f:param name="mode" value="'show'" />
+        <f:param name="direction" value="'down'" />
       </p:effect> 
     </ui:define>
 

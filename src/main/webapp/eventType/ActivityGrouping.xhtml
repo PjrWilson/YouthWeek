@@ -34,7 +34,8 @@
                               itemValue="#{activity}"
                               forceSelection="true"
                               emptyMessage="No matching Activities"
-                              groupBy="#{activityGroupingBean.getGroup(activity)}" >
+                              groupBy="#{activityGroupingBean.getGroup(activity)}" 
+                              scrollHeight="500">
                 <p:column>
                   <b>#{activity.name}</b>
                 </p:column>
@@ -74,7 +75,8 @@
                               itemValue="#{activity}"
                               forceSelection="true"
                               emptyMessage="No matching Activities"
-                              groupBy="#{activityGroupingBean.getGroup(activity)}" >
+                              groupBy="#{activityGroupingBean.getGroup(activity)}" 
+                              scrollHeight="500" >
                 <p:column>
                   <b>#{activity.name}</b>
                 </p:column>

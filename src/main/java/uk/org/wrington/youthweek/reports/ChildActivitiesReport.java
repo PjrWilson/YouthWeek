@@ -187,6 +187,12 @@ public class ChildActivitiesReport implements Serializable {
       } else {
         add = true;
       }
+      
+      // Only add if there are activities.
+      if (add)
+      {
+        add = c.getActivities() != null && c.getActivities().size() > 0;
+      }
       if (add) {
         // Create a child container for each one.
         childList.add(new ChildContainer(c));

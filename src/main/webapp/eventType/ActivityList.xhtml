@@ -25,7 +25,7 @@
           <p:menuitem value="Unassigned" disabled="#{theDay.dayNumber == 6}" update="datalist" actionListener="#{activityView.moveSelected(6)}" />
         </p:submenu>
         <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventTypeEditForm" oncomplete="PF('EventTypeEditDialog').show()" />
-        <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" actionListener="#{eventTypeController.destroy}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"  />
+        <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" actionListener="#{activityView.deleteSelected}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"  />
       </p:contextMenu>
 
       <!--p:panel rendered="#{activityDayView.selected != null}" header="#{bundle.ListEventTypeTitle} for #{activityDayView.selected.dayName}"-->
@@ -33,6 +33,7 @@
                    id="datalist" value="#{theDay.activities}" var="item"
                    selectionMode="single" selection="#{theDay.selected}"
                    paginator="true"
+                   paginatorPosition="bottom"
                    rowKey="#{item.activityid}"
                    rows="25"
                    rowsPerPageTemplate="10,15,20,25,30,40,50"

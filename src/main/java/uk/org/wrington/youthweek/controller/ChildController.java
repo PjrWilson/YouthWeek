@@ -6,6 +6,7 @@
 package uk.org.wrington.youthweek.controller;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -35,7 +36,7 @@ public class ChildController implements Serializable {
   @EJB
   private uk.org.wrington.youthweek.model.ChildFacade ejbFacade;
   private List<Child> items = null;
- /// private EventType selected;
+  /// private EventType selected;
 //  private EventType created;
 
 //  @ManagedProperty(value = "#{eventOccurrenceController}")
@@ -75,7 +76,12 @@ public class ChildController implements Serializable {
 //  }
   public Child create(Child newChild) {
     System.out.println("CREATE");
-    Child ret = persist(PersistAction.CREATE, newChild, ResourceBundle.getBundle("/Bundle").getString("ChildCreated"));
+    Child ret = persist(
+            PersistAction.CREATE,
+            newChild,
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ChildCreated"),
+                    newChild.getFirstname()));
     if (!JsfUtil.isValidationFailed()) {
       items = null;    // Invalidate list of items to trigger re-query.
     }
@@ -83,7 +89,12 @@ public class ChildController implements Serializable {
   }
 
   public void update(Child child) {
-    Child ret = persist(PersistAction.UPDATE, child, ResourceBundle.getBundle("/Bundle").getString("ChildUpdated"));
+    Child ret = persist(
+            PersistAction.UPDATE,
+            child,
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ChildUpdated"),
+                    child.getFirstname()));
     if (ret != null) {
       int index = items.indexOf(child);
       if (index > -1) {
@@ -111,7 +122,7 @@ public class ChildController implements Serializable {
   public void refreshItems() {
     items = null;
   }
-  
+
   private Child persist(PersistAction persistAction, Child child, String successMessage) {
     System.out.println("PERSIST");
     Child ret = null;

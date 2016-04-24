@@ -27,7 +27,8 @@ import javax.persistence.Table;
 @NamedQueries({
   @NamedQuery(name = "ExtraItemEntry.findAll", query = "SELECT e FROM ExtraItemEntry e"),
   @NamedQuery(name = "ExtraItemEntry.findByChild", query = "SELECT e FROM ExtraItemEntry e WHERE e.child.childid = :childid"),
-  @NamedQuery(name = "ExtraItemEntry.findByItemid", query = "SELECT e FROM ExtraItemEntry e WHERE e.item.itemid = :itemid")})
+  @NamedQuery(name = "ExtraItemEntry.findByItemid", query = "SELECT e FROM ExtraItemEntry e WHERE e.item.itemid = :itemid"),
+  @NamedQuery(name = "ExtraItemEntry.deleteAll", query = "DELETE FROM ExtraItemEntry")})
 public class ExtraItemEntry implements Serializable {
 
   private static final long serialVersionUID = 1L;
