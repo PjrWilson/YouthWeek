@@ -6,14 +6,9 @@
 package uk.org.wrington.youthweek.model.util;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import org.joda.time.LocalDate;
-import uk.org.wrington.youthweek.app.StaticValues;
 import uk.org.wrington.youthweek.model.Activity;
 import uk.org.wrington.youthweek.model.Contact;
 import uk.org.wrington.youthweek.settings.Settings;

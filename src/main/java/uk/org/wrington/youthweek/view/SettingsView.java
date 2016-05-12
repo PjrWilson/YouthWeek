@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 import org.primefaces.event.SelectEvent;
 import uk.org.wrington.youthweek.controller.ExtraItemController;
 import uk.org.wrington.youthweek.model.ExtraItem;
+import uk.org.wrington.youthweek.model.util.DateHelper;
 import uk.org.wrington.youthweek.model.util.JsfUtil;
 import uk.org.wrington.youthweek.settings.Settings;
 
@@ -104,8 +105,8 @@ public class SettingsView implements Serializable {
       
       settings.setStartDate(mNewStartDate, mClearChildChoices);
       System.out.println("START DATE = " + mNewStartDate.toString());
-      SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-      JsfUtil.addSuccessMessage("Selected start date " + format.format(mNewStartDate));
+      JsfUtil.addSuccessMessage("Selected start date " + 
+              DateHelper.getInstance().formatDate("dd/MM/yyyy", mNewStartDate));
       
       if (mClearChildChoices) {
         JsfUtil.addSuccessMessage("Activity & BBQ Selections cleared");
@@ -145,7 +146,7 @@ public class SettingsView implements Serializable {
     System.out.println("SettingsView:finaliseCreate");
     if (created != null) {
       extraItemController.create(created);
-      JsfUtil.addSuccessMessage("Created BBQ Item " + created.getName());
+      //JsfUtil.addSuccessMessage("Created BBQ Item " + created.getName());
       created = null;
     }
   }

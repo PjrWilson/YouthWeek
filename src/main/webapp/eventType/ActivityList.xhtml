@@ -39,7 +39,10 @@
                    rowsPerPageTemplate="10,15,20,25,30,40,50"
                    sortBy="#{item.startTime}"
                    emptyMessage="#{bundle.ListEventTypeEmpty}"
-                   resizableColumns="true">
+                   resizableColumns="true"
+                   currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
+                   paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                   >
         <!--f:facet name="header">
           <p:commandButton id="createButton" icon="ui-icon-plus" style="margin-top: 0px !important"  value="#{bundle.Create}" actionListener="#{eventTypeController.prepareCreate}" update="" />    
           <p:commandButton id="deleteButton" icon="ui-icon-trash" style="margin-top: 0px !important"  value="#{bundle.Delete}" actionListener="#{eventTypeController.destroy}" update="" disabled="#{empty eventTypeController.selected}"/>
@@ -195,7 +198,7 @@
           </p:menuButton>
           <p:commandButton id="copyButton"   icon="ui-icon-copy"   value="Copy" actionListener="#{activityView.prepareCopy(theDay)}" update=":EventTypeCreateDlg" oncomplete="PF('EventTypeCreateDialog').show()" disabled="#{empty theDay.selected}"/>
           <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventTypeEditForm" oncomplete="PF('EventTypeEditDialog').show()" disabled="#{empty theDay.selected}"/>
-          <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{eventTypeController.destroy}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty theDay.selected}"/>
+          <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{activityView.deleteSelected}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty theDay.selected}"/>
           <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{activityView.refresh}" update="datalist" />
         </f:facet>
 
@@ -205,7 +208,7 @@
 
     <ui:include src="Create.xhtml"/>
     <ui:include src="Edit.xhtml"/>
-    
+
   </ui:composition>
 
 </html>

@@ -6,6 +6,7 @@
 package uk.org.wrington.youthweek.controller;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -52,20 +53,29 @@ public class ExtraItemController implements Serializable {
 
   public void create(ExtraItem newItem) {
     System.out.println("CREATE");
-    persist(PersistAction.CREATE, newItem, ResourceBundle.getBundle("/Bundle").getString("ExtraItemCreated"));
+    persist(PersistAction.CREATE, newItem, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ExtraItemCreated"),
+                    newItem.getName()));
     if (!JsfUtil.isValidationFailed()) {
       items = null;    // Invalidate list of items to trigger re-query.
     }
   }
 
   public void update(ExtraItem updateItem) {
-    persist(PersistAction.UPDATE, updateItem, ResourceBundle.getBundle("/Bundle").getString("ExtraItemUpdated"));
+    persist(PersistAction.UPDATE, updateItem, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ExtraItemUpdated"),
+                    updateItem.getName()));
     items = null;
   }
 
   public void destroy(ExtraItem destroyItem) {
     System.out.println("DESTROY");
-    persist(PersistAction.DELETE, destroyItem, ResourceBundle.getBundle("/Bundle").getString("ExtraItemDeleted"));
+    persist(PersistAction.DELETE, destroyItem, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ExtraItemDeleted"),
+                    destroyItem.getName()));
     if (!JsfUtil.isValidationFailed()) {
       items = null;    // Invalidate list of items to trigger re-query.
     }

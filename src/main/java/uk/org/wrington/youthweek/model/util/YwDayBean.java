@@ -6,13 +6,12 @@
 package uk.org.wrington.youthweek.model.util;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import org.joda.time.LocalDate;
 import uk.org.wrington.youthweek.app.StaticValues;
 import uk.org.wrington.youthweek.settings.Settings;
 
@@ -47,11 +46,10 @@ public class YwDayBean implements Serializable {
 
   public String getDayDate(int dayNumber) {
     if (settings != null) {
-      LocalDate ld = new LocalDate(settings.getStartDate().getTime());
-      // Add day - 1.
-//      SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-      SimpleDateFormat format = new SimpleDateFormat("dd-MMM");
-      return format.format(ld.plusDays(dayNumber - 1).toDate());
+      Calendar c
+              = DateHelper.getInstance().getCalendar(settings.getStartDate());
+      c.add(Calendar.DAY_OF_YEAR, dayNumber - 1);
+      return DateHelper.getInstance().formatDate("dd-MMM", c);
     }
     return "";
   }
@@ -62,8 +60,7 @@ public class YwDayBean implements Serializable {
 
   public String getYear() {
     if (settings != null) {
-      SimpleDateFormat format = new SimpleDateFormat("YYYY");
-      return format.format(settings.getStartDate());
+      return DateHelper.getInstance().formatDate("YYYY", settings.getStartDate());
     }
     return "";
   }

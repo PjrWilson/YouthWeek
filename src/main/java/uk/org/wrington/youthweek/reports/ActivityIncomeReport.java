@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.view.ViewScoped;
 import javax.persistence.Query;
 import uk.org.wrington.youthweek.app.StaticValues;
+import uk.org.wrington.youthweek.controller.ChildController;
 import uk.org.wrington.youthweek.model.Activity;
+import uk.org.wrington.youthweek.model.ActivityEntry;
+import uk.org.wrington.youthweek.model.Child;
 
 /**
  *
@@ -80,8 +84,8 @@ public class ActivityIncomeReport implements Serializable {
     }
   }
   // The controller.
-//  @ManagedProperty(value = "#{activityController}")
-//  private ActivityController activityController;
+  @ManagedProperty(value = "#{childController}")
+  private ChildController childController;
   @EJB
   uk.org.wrington.youthweek.model.ActivityFacade ejbFacade;
   @EJB
@@ -90,6 +94,8 @@ public class ActivityIncomeReport implements Serializable {
 //  private Map<Integer, List<ActivityInfo>> activitiesPerDay;
   private List<ActivityDay> activityDays;
   private double allIncome = 0d;
+  private int childrenPayingAdminFee = 0;
+  private int childrenWithActivities = 0;
   // private final double[] dayIncome = new double[5];
 
   /**
@@ -102,7 +108,7 @@ public class ActivityIncomeReport implements Serializable {
     //  System.out.println("Init Report");
     activityDays = new ArrayList<>();
     allIncome = 0d;
-
+    
     // Get the activities for each day.
     for (int i = 1; i <= 5; ++i) {
       //   dayIncome[i - 1] = 0;
@@ -117,12 +123,30 @@ public class ActivityIncomeReport implements Serializable {
       }
       activityDays.add(day);
     }
+    
+    // Find all children with > 0 activities who are paying the admin fee.
+    childrenPayingAdminFee = 0;
+    childrenWithActivities = 0;
+    List<Child> allChildren = childController.getItems();
+    for (Child c : allChildren) {
+      List<ActivityEntry> childActivities = c.getActivities();
+      if (childActivities != null && childActivities.size() > 0) {
+        ++childrenWithActivities;
+        if (!c.getNoAdminFee()) {
+          ++childrenPayingAdminFee;
+        }
+      }
+    }
   }
 
 //  public void setActivityController(ActivityController ac) {
 //    this.activityController = ac;
 //  }
 //
+  public void setChildController(ChildController cc) {
+    this.childController = cc;
+  }
+
   public List<ActivityDay> getDays() {
     return activityDays;
   }
@@ -179,4 +203,11 @@ public class ActivityIncomeReport implements Serializable {
 //    return fgCols[dayNo-1];
 //  }
 
+  public int getChildrenWithActivies() {
+    return childrenWithActivities;
+  }
+
+  public int getChildrenPayingAdminFee() {
+    return childrenPayingAdminFee;
+  }
 }

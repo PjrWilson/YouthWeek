@@ -8,15 +8,16 @@ package uk.org.wrington.youthweek.view;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import org.joda.time.LocalDate;
 import uk.org.wrington.youthweek.controller.ActivityController;
 import uk.org.wrington.youthweek.model.Activity;
 import uk.org.wrington.youthweek.model.util.CopyUtil;
+import uk.org.wrington.youthweek.model.util.DateHelper;
 import uk.org.wrington.youthweek.settings.Settings;
 
 /**
@@ -101,6 +102,8 @@ public class ActivityViewBean implements Serializable {
       Activity activity = selectedDay.getSelected();
       activityController.destroy(activity);
       selectedDay.setSelected(null);
+      // Make sure activities are set.
+      selectedDay.setActivities(activityController.getActivitiesForDay(selectedDay.getDayNumber()));
     }
   }
   
@@ -148,10 +151,10 @@ public class ActivityViewBean implements Serializable {
     int dayNo = selectedDay.getDayNumber();
     System.out.println("getDayDate for " + selectedDay.getDayName());
     if (dayNo >= 1 && dayNo <= 5) {
-      LocalDate ld = new LocalDate(settings.getStartDate().getTime());
+      Calendar c = DateHelper.getInstance().getCalendar(settings.getStartDate());
       // Add day - 1.
-      SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-      return format.format(ld.plusDays(dayNo - 1).toDate());
+      c.add(Calendar.DAY_OF_YEAR, dayNo - 1);
+      return DateHelper.getInstance().formatDate("dd/MM/yyyy", c);
     }
     return "";
   }

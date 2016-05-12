@@ -21,8 +21,7 @@
         <p:graphicImage style="display:block; margin: auto; " id="logo-wording" name="Logo-Wording.png" library="images" />
         <div id="starttitle">
           <h1>w/c
-            <h:outputText value="#{settings.startDate}">
-              <f:convertDateTime dateStyle="short" type="date" />
+              <h:outputText value="#{ywDayBean.getDayNameAndDate(1)}-#{ywDayBean.year}">
             </h:outputText>
           </h1>
         </div>

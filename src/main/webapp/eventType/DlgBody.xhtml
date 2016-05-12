@@ -33,7 +33,7 @@ and open the template in the editor.
         <p:column><p:outputLabel value="Pick Up Time" for="endtime" />
         </p:column>
         <p:column>
-          <p:calendar id="endtime" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.endTime}" />
+          <p:calendar id="endtime" locale="en_GB" timeZone="Europe/London" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.endTime}" />
         </p:column>
       </p:row>
       <p:row>
@@ -53,13 +53,13 @@ and open the template in the editor.
           <p:outputLabel value="Activity Start Time" for="actstarttime" />
         </p:column>
         <p:column>
-          <p:calendar disabled="#{theActivity.travelTimeRequired != true}" id="actstarttime" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.activityStartTime}" />
+          <p:calendar disabled="#{theActivity.travelTimeRequired != true}" id="actstarttime" locale="en_GB" timeZone="Europe/London" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.activityStartTime}" />
         </p:column>
         <p:column>
           <p:outputLabel value="Activity End Time" for="actendtime" />
         </p:column>
         <p:column>
-          <p:calendar disabled="#{theActivity.travelTimeRequired != true}" id="actendtime" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.activityEndTime}" />
+          <p:calendar disabled="#{theActivity.travelTimeRequired != true}" id="actendtime" locale="en_GB" timeZone="Europe/London" pattern="HH:mm" minHour="8" timeOnly="true" value="#{theActivity.activityEndTime}" />
         </p:column>
       </p:row>
       <p:row>

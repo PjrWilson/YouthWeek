@@ -18,8 +18,8 @@
         <p:contextMenu for="datalist" id="contactContextMenu">
           <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ContactEditForm" oncomplete="PF('ContactEditDialog').show()" />
           <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" rendered="#{settings.disableDelete == false}" actionListener="#{contactController.destroy}" update=":growl,datalist"  />
-          <p:menuitem icon="ui-icon-plus" value="Add To Committee" rendered="#{contactController.selected.committee == false}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
-          <p:menuitem icon="ui-icon-minus" value="Take Off Committee" rendered="#{contactController.selected.committee == true}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
+          <p:menuitem value="Committee" rendered="#{contactController.selected.committee == false}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
+          <p:menuitem icon="ui-icon-check" value="Committee" rendered="#{contactController.selected.committee == true}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
         </p:contextMenu>
         <!--p:panel -->
         <p:dataTable id="datalist" 
@@ -34,7 +34,10 @@
                      sortBy="#{item.surname}"
                      rows="25"
                      rowsPerPageTemplate="10,15,20,25,30,40,50"
-                     emptyMessage="#{bundle.ListContactEmpty}">
+                     emptyMessage="#{bundle.ListContactEmpty}"
+                     currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     >
           <f:facet name="header">
             #{bundle.ListContactTitle}
           </f:facet>

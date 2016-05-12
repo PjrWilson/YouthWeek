@@ -6,6 +6,7 @@
 package uk.org.wrington.youthweek.controller;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -57,14 +58,20 @@ public class ActivityController implements Serializable {
 
   public void create(Activity newActivity) {
     System.out.println("CREATE");
-    persist(PersistAction.CREATE, newActivity, ResourceBundle.getBundle("/Bundle").getString("EventTypeCreated"));
+    persist(PersistAction.CREATE, newActivity, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("EventTypeCreated"),
+                    newActivity.getName()));
     if (!JsfUtil.isValidationFailed()) {
       items = null;    // Invalidate list of items to trigger re-query.
     }
   }
 
   public void update(Activity activity) {
-    Activity ret = persist(PersistAction.UPDATE, activity, ResourceBundle.getBundle("/Bundle").getString("EventTypeUpdated"));
+    Activity ret = persist(PersistAction.UPDATE, activity, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("EventTypeUpdated"),
+                    activity.getName()));
     if (ret != null && items != null) {
       int index = items.indexOf(activity);
       if (index > -1) {
@@ -75,7 +82,10 @@ public class ActivityController implements Serializable {
 
   public void destroy(Activity activity) {
     System.out.println("DESTROY");
-    persist(PersistAction.DELETE, activity, ResourceBundle.getBundle("/Bundle").getString("EventTypeDeleted"));
+    persist(PersistAction.DELETE, activity, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("EventTypeDeleted"),
+                    activity.getName()));
     if (!JsfUtil.isValidationFailed()) {
       items = null;    // Invalidate list of items to trigger re-query.
     }

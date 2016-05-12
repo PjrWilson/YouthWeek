@@ -8,12 +8,14 @@ package uk.org.wrington.youthweek.reports;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import org.joda.time.LocalDate;
 import uk.org.wrington.youthweek.app.StaticValues;
+import uk.org.wrington.youthweek.model.util.DateHelper;
+import uk.org.wrington.youthweek.model.util.YwDayBean;
 import uk.org.wrington.youthweek.settings.Settings;
 
 /**
@@ -24,6 +26,8 @@ import uk.org.wrington.youthweek.settings.Settings;
 @SessionScoped
 public class ReportHelperBean implements Serializable {
 
+  @ManagedProperty(value = "#{ywDayBean}")
+  private YwDayBean ywDayBean;
   @ManagedProperty(value = "#{settings}")
   private Settings settings;
 
@@ -37,37 +41,30 @@ public class ReportHelperBean implements Serializable {
     this.settings = settings;
   }
 
+  public void setYwDayBean(YwDayBean ywDayBean) {
+    this.ywDayBean = ywDayBean;
+  }
+  
   public List<Integer> getDays() {
     return Arrays.asList(1, 2, 3, 4, 5);
   }
 
   public String getDayName(int dayNumber) {
-    return StaticValues.getDayLabel(dayNumber);
+    return ywDayBean.getDayName(dayNumber);
   }
 
   public String getDayDate(int dayNumber) {
-    if (settings != null) {
-      LocalDate ld = new LocalDate(settings.getStartDate().getTime());
-      // Add day - 1.
-//      SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-      SimpleDateFormat format = new SimpleDateFormat("dd-MMM");
-      return format.format(ld.plusDays(dayNumber - 1).toDate());
-    }
-    return "";
+    return ywDayBean.getDayDate(dayNumber);
   }
 
   public String getDayNameAndDate(int dayNumber) {
-    return StaticValues.getDayLabel(dayNumber) + " " + getDayDate(dayNumber);
+    return ywDayBean.getDayNameAndDate(dayNumber);
   }
 
   public String getYear() {
-    if (settings != null) {
-      SimpleDateFormat format = new SimpleDateFormat("YYYY");
-      return format.format(settings.getStartDate());
-    }
-    return "";
+    return ywDayBean.getYear();
   }
-  
+
   public String getReportTitlePrefix() {
     return "Youth Week " + getYear();
   }

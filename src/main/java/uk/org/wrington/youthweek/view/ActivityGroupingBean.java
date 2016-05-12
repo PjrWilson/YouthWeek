@@ -81,7 +81,7 @@ public class ActivityGroupingBean implements Serializable {
       System.out.println("Getting source activities");
       sourceActivities
               = ejbFacade.getEntityManager().createQuery(
-                      "SELECT e FROM Activity e WHERE e.activityday < 6 ORDER BY e.activityday").getResultList();
+                      "SELECT e FROM Activity e WHERE e.activityday < 6 ORDER BY e.activityday, e.startTime").getResultList();
     }
     return sourceActivities;
   }
@@ -92,7 +92,7 @@ public class ActivityGroupingBean implements Serializable {
       System.out.println("Getting source activities");
       targetActivities
               = ejbFacade.getEntityManager().createQuery(
-                      "SELECT e FROM Activity e WHERE e.activityday < 6 ORDER BY e.activityday").getResultList();
+                      "SELECT e FROM Activity e WHERE e.activityday < 6 ORDER BY e.activityday, e.startTime").getResultList();
     }
     return targetActivities;
   }

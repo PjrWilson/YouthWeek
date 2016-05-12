@@ -6,6 +6,7 @@
 package uk.org.wrington.youthweek.controller;
 
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -76,7 +77,10 @@ public class ContactController implements Serializable {
     // Swap selected and created.
     Contact oldSelection = selected;
     selected = created;
-    persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ContactCreated"));
+    persist(PersistAction.CREATE, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ContactCreated"),
+                    selected.getFirstname(), selected.getSurname()));
     if (!JsfUtil.isValidationFailed()) {
       items = null;    // Invalidate list of items to trigger re-query.
     }
@@ -85,11 +89,17 @@ public class ContactController implements Serializable {
   }
 
   public void update() {
-    persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("ContactUpdated"));
+    persist(PersistAction.UPDATE, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ContactUpdated"),
+                    selected.getFirstname(), selected.getSurname()));
   }
 
   public void destroy() {
-    persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("ContactDeleted"));
+    persist(PersistAction.DELETE, 
+            MessageFormat.format(
+                    ResourceBundle.getBundle("/Bundle").getString("ContactDeleted"),
+                    selected.getFirstname(), selected.getSurname()));
     if (!JsfUtil.isValidationFailed()) {
       selected = null; // Remove selection
       items = null;    // Invalidate list of items to trigger re-query.

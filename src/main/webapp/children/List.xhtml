@@ -33,18 +33,14 @@
                      sortBy="#{item.surname}"
                      rows="#{childView.rows}"
                      rowsPerPageTemplate="10,15,20,25,30,40,50"
+                     currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                      >
           <f:facet name="header">
-            Child List (Count: #{fn:length(childView.children)})
-            <p:spacer rendered="false" width="10px"/>
-            <p:commandButton rendered="false" id="createButtonTop" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{childView.prepareCreate}" update=":ChildCreateForm" oncomplete="PF('ChildCreateDialog').show()"/>
-            <p:commandButton rendered="false" id="editButtonTop"   icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()" disabled="#{empty childView.selected}"/>
-            <p:commandButton rendered="false" id="editScheduleButtonTop" icon="ui-icon-cart" value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" disabled="#{empty childView.selected}"/>
-            <p:commandButton  id="deleteButtonTop" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childController.destroy}" update=":growl,datalist" rendered="false" disabled="#{empty childView.selected}"/>
-            <p:commandButton rendered="false" id="refreshButtonTop" icon="ui-icon-refresh"  value="Refresh" actionListener="#{childController.refreshItems}" update="datalist" />
+            Child List (Total Count: #{fn:length(childView.children)})
           </f:facet>
-          <p:ajax event="rowSelect"   update="createButton createButtonTop editButton editButtonTop editScheduleButton editScheduleButtonTop deleteButton deleteButtonTop"/>
-          <p:ajax event="rowUnselect" update="createButton createButtonTop editButton editButtonTop editScheduleButton editScheduleButtonTop deleteButton deleteButtonTop"/>
+             <p:ajax event="rowSelect"   update="createButton  editButton editScheduleButton  deleteButton"/>
+          <p:ajax event="rowUnselect" update="createButton  editButton editScheduleButton deleteButton "/>
 
           <p:column style="width:16px" styleClass="#{item.tetanusUpToDate != true ? 'noTetanus' : null}">
             <p:rowToggler />
