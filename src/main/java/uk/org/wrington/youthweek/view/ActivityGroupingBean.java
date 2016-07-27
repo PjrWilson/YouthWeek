@@ -89,7 +89,7 @@ public class ActivityGroupingBean implements Serializable {
   public List<Activity> getTargetActivities() {
 
     if (targetActivities == null) {
-      System.out.println("Getting source activities");
+      System.out.println("Getting target activities");
       targetActivities
               = ejbFacade.getEntityManager().createQuery(
                       "SELECT e FROM Activity e WHERE e.activityday < 6 ORDER BY e.activityday, e.startTime").getResultList();
@@ -110,34 +110,56 @@ public class ActivityGroupingBean implements Serializable {
 
   public List<Activity> completeSourceActivity(String query) {
 
-    List<Activity> allActivities = getSourceActivities();
-    List<Activity> filteredActivities = new ArrayList<>();
+    return completeActivity(query, selectedTarget, getSourceActivities());
 
-    String queryLower = query.toLowerCase();
-    for (Activity activity : allActivities) {
-      if (activity.getName().toLowerCase().contains(queryLower)) {
-        // See if its in the current selected activites.
-        boolean add = !activity.equals(selectedTarget);
-        if (add) {
-          filteredActivities.add(activity);
-        }
-      }
-    }
-
-    return filteredActivities;
+//    List<Activity> allActivities = getSourceActivities();
+//    List<Activity> filteredActivities = new ArrayList<>();
+//
+//    String queryLower = query.toLowerCase();
+//    for (Activity activity : allActivities) {
+//      if (activity.getName().toLowerCase().contains(queryLower)) {
+//        // See if its in the current selected activites.
+//        boolean add = !activity.equals(selectedTarget);
+//        if (add) {
+//          filteredActivities.add(activity);
+//        }
+//      }
+//    }
+//
+//    return filteredActivities;
   }
 
   public List<Activity> completeTargetActivity(String query) {
 
-    List<Activity> allActivities = getSourceActivities();
+    return completeActivity(query, selectedSource, getTargetActivities());
+//    List<Activity> allActivities = getSourceActivities();
+//    List<Activity> filteredActivities = new ArrayList<>();
+//
+//    String queryLower = query.toLowerCase();
+//    for (Activity activity : allActivities) {
+//
+//      if (activity.getName().toLowerCase().contains(queryLower)) {
+//        // See if its in the current selected activites.
+//        boolean add = !activity.equals(selectedSource);
+//        if (add) {
+//          filteredActivities.add(activity);
+//        }
+//      }
+//    }
+//
+//    return filteredActivities;
+  }
+
+  public List<Activity> completeActivity(String query, Activity activityToExclude, List<Activity> activities)
+  {
     List<Activity> filteredActivities = new ArrayList<>();
 
     String queryLower = query.toLowerCase();
-    for (Activity activity : allActivities) {
+    for (Activity activity : activities) {
 
       if (activity.getName().toLowerCase().contains(queryLower)) {
         // See if its in the current selected activites.
-        boolean add = !activity.equals(selectedSource);
+        boolean add = !activity.equals(activityToExclude);
         if (add) {
           filteredActivities.add(activity);
         }
@@ -146,7 +168,7 @@ public class ActivityGroupingBean implements Serializable {
 
     return filteredActivities;
   }
-
+  
   public String getGroup(Activity a) {
     if (a != null && a.getActivityDay() != null && a.getActivityDay() < 6) {
       return StaticValues.getDayLabel(a.getActivityDay());
