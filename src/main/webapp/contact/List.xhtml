@@ -14,88 +14,92 @@
     </ui:define>
 
     <ui:define name="body">
-      <h:form id="ContactListForm">
-        <p:contextMenu for="datalist" id="contactContextMenu">
-          <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ContactEditForm" oncomplete="PF('ContactEditDialog').show()" />
-          <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" rendered="#{settings.disableDelete == false}" actionListener="#{contactController.destroy}" update=":growl,datalist"  />
-          <p:menuitem value="Committee" rendered="#{contactController.selected.committee == false}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
-          <p:menuitem icon="ui-icon-check" value="Committee" rendered="#{contactController.selected.committee == true}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
-        </p:contextMenu>
-        <!--p:panel -->
-        <p:dataTable id="datalist" 
-                     widgetVar="datalist"
-                     value="#{contactController.items}" 
-                     var="item"
-                     selectionMode="single" 
-                     selection="#{contactController.selected}"
-                     paginator="true"
-                     paginatorPosition="bottom"
-                     rowKey="#{item.contactid}"
-                     sortBy="#{item.surname}"
-                     rows="25"
-                     rowsPerPageTemplate="10,15,20,25,30,40,50"
-                     emptyMessage="#{bundle.ListContactEmpty}"
-                     currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
-                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                     >
-          <f:facet name="header">
-            #{bundle.ListContactTitle}
-          </f:facet>
+      <div class="ui-g">
+        <div class="ui-g-12">
 
-          <p:ajax event="rowSelect"   update="createButton editButton deleteButton :ContactListForm:contactContextMenu"/>
-          <p:ajax event="rowUnselect" update="createButton editButton deleteButton :ContactListForm:contactContextMenu"/>
+          <h:form id="ContactListForm">
+            <p:contextMenu for="datalist" id="contactContextMenu">
+              <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ContactEditForm" oncomplete="PF('ContactEditDialog').show()" />
+              <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" rendered="#{settings.disableDelete == false}" actionListener="#{contactController.destroy}" update=":growl,datalist"  />
+              <p:menuitem value="Committee" rendered="#{contactController.selected.committee == false}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
+              <p:menuitem icon="ui-icon-check" value="Committee" rendered="#{contactController.selected.committee == true}" actionListener="#{contactController.toggleCommittee}" update=":growl,datalist,:ContactListForm:contactContextMenu"  />
+            </p:contextMenu>
+            <!--p:panel -->
+            <p:dataTable id="datalist" 
+                         widgetVar="datalist"
+                         value="#{contactController.items}" 
+                         var="item"
+                         selectionMode="single" 
+                         selection="#{contactController.selected}"
+                         paginator="true"
+                         paginatorPosition="bottom"
+                         rowKey="#{item.contactid}"
+                         sortBy="#{item.surname}"
+                         rows="25"
+                         rowsPerPageTemplate="10,15,20,25,30,40,50"
+                         emptyMessage="#{bundle.ListContactEmpty}"
+                         currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         >
+              <f:facet name="header">
+                #{bundle.ListContactTitle}
+              </f:facet>
 
-          <p:column style="width:16px" styleClass="#{item.committee == true ? 'committee' : null}">
-            <p:rowToggler />
-          </p:column>
-          <p:column filterBy="#{item.surname}" filterMatchMode="contains" sortBy="#{item.surname}">
-            <f:facet name="header">
-              <h:outputText value="#{bundle.ListContactTitle_surname}"/>
-            </f:facet>
-            <h:outputText value="#{item.surname}"/>
-          </p:column>
-          <p:column filterBy="#{item.firstname}" filterMatchMode="contains" sortBy="#{item.firstname}">
-            <f:facet name="header">
-              <h:outputText value="#{bundle.ListContactTitle_firstname}"/>
-            </f:facet>
-            <h:outputText value="#{item.firstname}" />
-          </p:column>
-          <p:column filterBy="#{item.email}"  filterMatchMode="contains" sortBy="#{item.email}" >
-            <f:facet name="header">
-              <h:outputText value="#{bundle.ListContactTitle_email}" />
-            </f:facet>
-            <h:outputText value="#{item.email}"/>
-          </p:column>
-          <p:column>
-            <f:facet name="header">
-              <h:outputText value="#{bundle.ListContactTitle_phone}" />
-            </f:facet>
-            <h:outputText value="#{item.phone}"/>
-          </p:column>
-          <p:column style="width:150px" styleClass="#{item.committee == true ? 'committee' : null}"
-                    filterBy="#{item.committee}" headerText="Committee?" filterMatchMode="equals"
-                    sortBy="#{item.committee}">
-            <f:facet name="filter">
-              <p:selectOneMenu onchange="PF('datalist').filter()">
-                <f:converter converterId="javax.faces.Boolean" />
-                <f:selectItem itemLabel="All" itemValue="" />
-                <f:selectItem itemLabel="Yes" itemValue="true" />
-                <f:selectItem itemLabel="No" itemValue="false" />
-              </p:selectOneMenu>
-            </f:facet>
-            <h:outputText value="#{item.committee ? 'Yes' : 'No'}"/>
-          </p:column>
+              <p:ajax event="rowSelect"   update="createButton editButton deleteButton :ContactListForm:contactContextMenu"/>
+              <p:ajax event="rowUnselect" update="createButton editButton deleteButton :ContactListForm:contactContextMenu"/>
 
-          <f:facet name="footer">
-            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
-            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ContactEditForm" oncomplete="PF('ContactEditDialog').show()" disabled="#{empty contactController.selected}"/>
-            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{contactController.destroy}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty contactController.selected}"/>
-            <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{contactController.refreshItems}" update="datalist" />
-          </f:facet>
-        </p:dataTable>
-        <!--/p:panel-->
-      </h:form>
+              <p:column style="width:16px" styleClass="#{item.committee == true ? 'committee' : null}">
+                <p:rowToggler />
+              </p:column>
+              <p:column filterBy="#{item.surname}" filterMatchMode="contains" sortBy="#{item.surname}">
+                <f:facet name="header">
+                  <h:outputText value="#{bundle.ListContactTitle_surname}"/>
+                </f:facet>
+                <h:outputText value="#{item.surname}"/>
+              </p:column>
+              <p:column filterBy="#{item.firstname}" filterMatchMode="contains" sortBy="#{item.firstname}">
+                <f:facet name="header">
+                  <h:outputText value="#{bundle.ListContactTitle_firstname}"/>
+                </f:facet>
+                <h:outputText value="#{item.firstname}" />
+              </p:column>
+              <p:column filterBy="#{item.email}"  filterMatchMode="contains" sortBy="#{item.email}" >
+                <f:facet name="header">
+                  <h:outputText value="#{bundle.ListContactTitle_email}" />
+                </f:facet>
+                <h:outputText value="#{item.email}"/>
+              </p:column>
+              <p:column>
+                <f:facet name="header">
+                  <h:outputText value="#{bundle.ListContactTitle_phone}" />
+                </f:facet>
+                <h:outputText value="#{item.phone}"/>
+              </p:column>
+              <p:column style="width:150px" styleClass="#{item.committee == true ? 'committee' : null}"
+                        filterBy="#{item.committee}" headerText="Committee?" filterMatchMode="equals"
+                        sortBy="#{item.committee}">
+                <f:facet name="filter">
+                  <p:selectOneMenu onchange="PF('datalist').filter()">
+                    <f:converter converterId="javax.faces.Boolean" />
+                    <f:selectItem itemLabel="All" itemValue="" />
+                    <f:selectItem itemLabel="Yes" itemValue="true" />
+                    <f:selectItem itemLabel="No" itemValue="false" />
+                  </p:selectOneMenu>
+                </f:facet>
+                <h:outputText value="#{item.committee ? 'Yes' : 'No'}"/>
+              </p:column>
 
+              <f:facet name="footer">
+                <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{contactController.prepareCreate}" update=":ContactCreateForm" oncomplete="PF('ContactCreateDialog').show()"/>
+                <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ContactEditForm" oncomplete="PF('ContactEditDialog').show()" disabled="#{empty contactController.selected}"/>
+                <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{contactController.destroy}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty contactController.selected}"/>
+                <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{contactController.refreshItems}" update="datalist" />
+              </f:facet>
+            </p:dataTable>
+            <!--/p:panel-->
+          </h:form>
+        </div>
+      </div>
       <ui:include src="Create.xhtml"/>
       <ui:include src="Edit.xhtml"/>
     </ui:define>

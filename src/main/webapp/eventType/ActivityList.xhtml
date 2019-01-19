@@ -12,200 +12,240 @@
 
     <c:set var="theDay" value="#{activityView.selectedDay}" />
 
-    <h:form id="ActivityListForm">
+    <div class="ui-g">        
+      <div class="ui-g-5 ui-g-nopad"/>
+      <div class="ui-g-2 ui-g-nopad">
+        <h:form id="ActivityMenuForm">
+          <p:selectOneMenu id="console" value="#{activityView.dayValue}" >
+            <p:ajax listener="#{activityView.dayValueChange}" update=":ActivityListForm" />
+            <f:selectItem itemLabel="Monday" itemValue="1" />
+            <f:selectItem itemLabel="Tuesday" itemValue="2" />
+            <f:selectItem itemLabel="Wednesday" itemValue="3" />
+            <f:selectItem itemLabel="Thursday" itemValue="4" />
+            <f:selectItem itemLabel="Friday" itemValue="5" />
+            <f:selectItem itemLabel="Unassigned" itemValue="6" />
+          </p:selectOneMenu>
+        </h:form>
+      </div>
+      <div class="ui-g-5 ui-g-nopad"/>
+    </div>
+    <div class="ui-g">        
+      <div class="ui-g-12">
+        <h:form id="ActivityListForm">
 
-      <p:contextMenu for="datalist">
-        <p:menuitem icon="ui-icon-copy" value="Copy" actionListener="#{activityView.prepareCopy(theDay)}" update=":EventTypeCreateForm" oncomplete="PF('EventTypeCreateDialog').show()"/>
-        <p:submenu icon="ui-icon-move" label="Move To" >
-          <p:menuitem value="Monday" disabled="#{theDay.dayNumber == 1}" update="datalist" actionListener="#{activityView.moveSelected(1)}" />
-          <p:menuitem value="Tuesday" disabled="#{theDay.dayNumber == 2}" update="datalist" actionListener="#{activityView.moveSelected(2)}" />
-          <p:menuitem value="Wednesday" disabled="#{theDay.dayNumber == 3}" update="datalist" actionListener="#{activityView.moveSelected(3)}" />
-          <p:menuitem value="Thursday" disabled="#{theDay.dayNumber == 4}" update="datalist" actionListener="#{activityView.moveSelected(4)}" />
-          <p:menuitem value="Friday" disabled="#{theDay.dayNumber == 5}" update="datalist" actionListener="#{activityView.moveSelected(5)}" />
-          <p:menuitem value="Unassigned" disabled="#{theDay.dayNumber == 6}" update="datalist" actionListener="#{activityView.moveSelected(6)}" />
-        </p:submenu>
-        <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventTypeEditForm" oncomplete="PF('EventTypeEditDialog').show()" />
-        <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" actionListener="#{activityView.deleteSelected}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"  />
-      </p:contextMenu>
+          <p:contextMenu for="datalist">
+            <p:menuitem icon="ui-icon-copy" value="Copy" actionListener="#{activityView.prepareCopy(theDay)}" update=":EventTypeCreateForm" oncomplete="PF('EventTypeCreateDialog').show()"/>
+            <p:submenu icon="ui-icon-move" label="Move To" >
+              <p:menuitem value="Monday" disabled="#{theDay.dayNumber == 1}" update="datalist" actionListener="#{activityView.moveSelected(1)}" />
+              <p:menuitem value="Tuesday" disabled="#{theDay.dayNumber == 2}" update="datalist" actionListener="#{activityView.moveSelected(2)}" />
+              <p:menuitem value="Wednesday" disabled="#{theDay.dayNumber == 3}" update="datalist" actionListener="#{activityView.moveSelected(3)}" />
+              <p:menuitem value="Thursday" disabled="#{theDay.dayNumber == 4}" update="datalist" actionListener="#{activityView.moveSelected(4)}" />
+              <p:menuitem value="Friday" disabled="#{theDay.dayNumber == 5}" update="datalist" actionListener="#{activityView.moveSelected(5)}" />
+              <p:menuitem value="Unassigned" disabled="#{theDay.dayNumber == 6}" update="datalist" actionListener="#{activityView.moveSelected(6)}" />
+            </p:submenu>
+            <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventTypeEditForm" oncomplete="PF('EventTypeEditDialog').show()" />
+            <p:menuitem icon="ui-icon-trash" value="#{bundle.Delete}" actionListener="#{activityView.deleteSelected}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"  />
+          </p:contextMenu>
 
       <!--p:panel rendered="#{activityDayView.selected != null}" header="#{bundle.ListEventTypeTitle} for #{activityDayView.selected.dayName}"-->
-      <p:dataTable rendered="#{theDay != null}"
-                   id="datalist" value="#{theDay.activities}" var="item"
-                   selectionMode="single" selection="#{theDay.selected}"
-                   paginator="true"
-                   paginatorPosition="bottom"
-                   rowKey="#{item.activityid}"
-                   rows="25"
-                   rowsPerPageTemplate="10,15,20,25,30,40,50"
-                   sortBy="#{item.startTime}"
-                   emptyMessage="#{bundle.ListEventTypeEmpty}"
-                   resizableColumns="true"
-                   currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
-                   paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                   >
-        <!--f:facet name="header">
-          <p:commandButton id="createButton" icon="ui-icon-plus" style="margin-top: 0px !important"  value="#{bundle.Create}" actionListener="#{eventTypeController.prepareCreate}" update="" />    
-          <p:commandButton id="deleteButton" icon="ui-icon-trash" style="margin-top: 0px !important"  value="#{bundle.Delete}" actionListener="#{eventTypeController.destroy}" update="" disabled="#{empty eventTypeController.selected}"/>
-        </f:facet-->
-        <f:facet name="header">
-          #{bundle.ListEventTypeTitle} for #{theDay.dayName} #{activityView.getDayDate()} (Count: #{fn:length(theDay.activities)})
-        </f:facet>
-        <p:ajax event="rowSelect"   update="createButton moveButton copyButton editButton deleteButton"/>
-        <p:ajax event="rowUnselect" update="createButton moveButton copyButton editButton deleteButton"/>
+          <p:dataTable rendered="#{theDay != null}"
+                       id="datalist" value="#{theDay.activities}" var="item"
+                       selectionMode="single" selection="#{theDay.selected}"
+                       paginator="true"
+                       paginatorPosition="bottom"
+                       rowKey="#{item.activityid}"
+                       rows="25"
+                       rowsPerPageTemplate="10,15,20,25,30,40,50"
+                       sortBy="#{item.startTime}"
+                       emptyMessage="#{bundle.ListEventTypeEmpty}"
+                       resizableColumns="true"
+                       currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
+                       paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                       >
+            <!--f:facet name="header">
+              <p:commandButton id="createButton" icon="ui-icon-plus" style="margin-top: 0px !important"  value="#{bundle.Create}" actionListener="#{eventTypeController.prepareCreate}" update="" />    
+              <p:commandButton id="deleteButton" icon="ui-icon-trash" style="margin-top: 0px !important"  value="#{bundle.Delete}" actionListener="#{eventTypeController.destroy}" update="" disabled="#{empty eventTypeController.selected}"/>
+            </f:facet-->
+            <f:facet name="header">
+              #{bundle.ListEventTypeTitle} for #{theDay.dayName} #{activityView.getDayDate()} (Count: #{fn:length(theDay.activities)})
+            </f:facet>
+            <p:ajax event="rowSelect"   update="createButton moveButton copyButton editButton deleteButton"/>
+            <p:ajax event="rowUnselect" update="createButton moveButton copyButton editButton deleteButton"/>
 
-        <p:column style="width:16px" styleClass="#{item.consentRequired == true ? 'consentRequired' : null}">
-          <p:rowToggler />
-        </p:column>
-        <p:column filterBy="#{item.name}" filterMatchMode="contains" sortBy="#{item.name}">
-          <f:facet name="header">
-            <h:outputText value="#{bundle.ListEventTypeTitle_eventname}"/>
-          </f:facet>
-          <h:outputText value="#{item.name}"/>
-        </p:column>
-        <p:column headerText="Org." styleClass="#{item.committeeMember == null ? 'noCommittee' : null}" sortBy="#{item.committeeMember.contactid}" style="width: 35px;text-align: center">
-          <h:outputText value="#{item.committeeMember != null ? 'Y' : 'N'}" />
-        </p:column>
-        <p:column headerText="Ldr." styleClass="#{fn:length(item.organisers) == 0 ? 'noLeaders' : null}" sortBy="#{fn:length(item.organisers)}" style="width: 35px;text-align: center">
-          <h:outputText value="#{fn:length(item.organisers) > 0 ? 'Y' : 'N'}" />
-        </p:column>
-        <p:column headerText="Drop Off" sortBy="#{item.startTime}" style="width: 70px">
-          <h:outputText value="#{item.startTime}">
-            <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
-          </h:outputText>
-        </p:column>
-        <p:column headerText="Activity Start" sortBy="#{item.activityStartTime}" style="width: 100px">
-          <h:outputText value="#{item.activityStartTime}">
-            <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
-          </h:outputText>
-        </p:column>
-        <p:column headerText="Pick Up" sortBy="#{item.endTime}" style="width: 70px" >
-          <h:outputText value="#{item.endTime}">
-            <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
-          </h:outputText>
-        </p:column>
-        <p:column headerText="Activity End" sortBy="#{item.activityEndTime}" style="width: 100px">
-          <h:outputText value="#{item.activityEndTime}">
-            <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
-          </h:outputText>
-        </p:column>
-        <!--p:column>
-          <f:facet name="header">
-            <h:outputText value="#{bundle.ListEventTypeTitle_eventdescription}"/>
-          </f:facet>
-          <h:outputText value="#{item.description}"/>
-        </p:column-->
-        <!--p:column>
-          <f:facet name="header">
-            <h:outputText value="#{bundle.ListEventTypeTitle_eventnotes}"/>
-          </f:facet>
-          <h:outputText value="#{item.notes}"/>
-        </p:column-->
-        <p:column style="width:64px">
-          <f:facet name="header">
-            <h:outputText value="#{bundle.ListEventTypeTitle_eventcost}"/>
-          </f:facet>
-          <h:outputText value="#{item.cost}">
-            <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
-          </h:outputText>
-        </p:column>
-        <p:column style="width:80px" sortBy="#{item.minyear}">
-          <f:facet name="header">
-            <h:outputText value="#{bundle.ListEventTypeTitle_eventminyear}" />
-          </f:facet>
-          <h:outputText value="#{schoolYearBean.getMinSchoolYearLabel(item.minyear)}"/>
-        </p:column>
-        <p:column style="width:80px" sortBy="#{item.maxyear}">
-          <f:facet name="header">
-            <h:outputText value="#{bundle.ListEventTypeTitle_eventmaxyear}" />
-          </f:facet>
-          <h:outputText value="#{schoolYearBean.getMaxSchoolYearLabel(item.maxyear)}"/>
-        </p:column>
-        <!--p:column style="width:60px">
-          <f:facet name="header">
-            <h:outputText value="Entries" />
-          </f:facet>
-          <h:outputText value="#{activityView.countEntries(item)}"/>
-        </p:column-->
-        <!--p:column>
-          <f:facet name="header">
-            <h:outputText value="#{bundle.ListEventTypeTitle_organiser}" />
-          </f:facet>
-          <ui:repeat value="#{item.organisers}" var="o" >
-            <h:outputText value="#{o.firstname} #{o.surname}" />
-            <h:outputText rendered="#{not empty o.email}" value=" e:#{o.email}" />
-            <h:outputText rendered="#{not empty o.phone}" value=" p:#{o.phone}" />
-            <br/>
-          </ui:repeat>
-        </p:column-->
+            <p:column style="width:16px" styleClass="#{item.consentRequired == true ? 'consentRequired' : null}">
+              <p:rowToggler />
+            </p:column>
+            <p:column style="width:50px;text-align: right" sortBy="#{item.activityid}" >
+              <f:facet name="header">
+                <h:outputText value="ID"/>
+              </f:facet>
+              <h:outputText value="#{item.activityid}"/>
+            </p:column>
+            <p:column filterBy="#{item.name}" filterMatchMode="contains" sortBy="#{item.name}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventname}"/>
+              </f:facet>
+              <h:outputText value="#{item.name}"/>
+            </p:column>
+            <p:column headerText="Org." styleClass="#{item.committeeMember == null ? 'noCommittee' : null}" sortBy="#{item.committeeMember.contactid}" style="width: 35px;text-align: center">
+              <h:outputText value="#{item.committeeMember != null ? 'Y' : 'N'}" />
+            </p:column>
+            <p:column headerText="Ldr." styleClass="#{fn:length(item.organisers) == 0 ? 'noLeaders' : null}" sortBy="#{fn:length(item.organisers)}" style="width: 35px;text-align: center">
+              <h:outputText value="#{fn:length(item.organisers) > 0 ? 'Y' : 'N'}" />
+            </p:column>
+            <p:column headerText="Drop Off" sortBy="#{item.startTime}" style="width: 70px">
+              <h:outputText value="#{item.startTime}">
+                <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+              </h:outputText>
+            </p:column>
+            <p:column headerText="Activity Start" sortBy="#{item.activityStartTime}" style="width: 100px">
+              <h:outputText value="#{item.activityStartTime}">
+                <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+              </h:outputText>
+            </p:column>
+            <p:column headerText="Activity End" sortBy="#{item.activityEndTime}" style="width: 100px">
+              <h:outputText value="#{item.activityEndTime}">
+                <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+              </h:outputText>
+            </p:column>
+            <p:column headerText="Pick Up" sortBy="#{item.endTime}" style="width: 70px" >
+              <h:outputText value="#{item.endTime}">
+                <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+              </h:outputText>
+            </p:column>
+            <!--p:column>
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventdescription}"/>
+              </f:facet>
+              <h:outputText value="#{item.description}"/>
+            </p:column-->
+            <!--p:column>
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventnotes}"/>
+              </f:facet>
+              <h:outputText value="#{item.notes}"/>
+            </p:column-->
+            <p:column style="width:64px">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventcost}"/>
+              </f:facet>
+              <h:outputText value="#{item.cost}">
+                <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
+              </h:outputText>
+            </p:column>
+            <p:column style="width:80px" sortBy="#{item.minyear}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventminyear}" />
+              </f:facet>
+              <h:outputText value="#{schoolYearBean.getMinSchoolYearLabel(item.minyear)}"/>
+            </p:column>
+            <p:column style="width:80px" sortBy="#{item.maxyear}">
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_eventmaxyear}" />
+              </f:facet>
+              <h:outputText value="#{schoolYearBean.getMaxSchoolYearLabel(item.maxyear)}"/>
+            </p:column>
+            <!--p:column style="width:60px">
+              <f:facet name="header">
+                <h:outputText value="Entries" />
+              </f:facet>
+              <h:outputText value="#{activityView.countEntries(item)}"/>
+            </p:column-->
+            <!--p:column>
+              <f:facet name="header">
+                <h:outputText value="#{bundle.ListEventTypeTitle_organiser}" />
+              </f:facet>
+              <ui:repeat value="#{item.organisers}" var="o" >
+                <h:outputText value="#{o.firstname} #{o.surname}" />
+                <h:outputText rendered="#{not empty o.email}" value=" e:#{o.email}" />
+                <h:outputText rendered="#{not empty o.phone}" value=" p:#{o.phone}" />
+                <br/>
+              </ui:repeat>
+            </p:column-->
 
-        <p:rowExpansion>
-          <p:panelGrid>
+            <p:rowExpansion>
+              <p:panelGrid>
 
-            <!--p:row>
-              <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventdescription}:</p:column>
-              <p:column colspan="5">#{item.description}</p:column>
-            </p:row-->
+                <!--p:row>
+                  <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventdescription}:</p:column>
+                  <p:column colspan="5">#{item.description}</p:column>
+                </p:row-->
+                <p:row>
+                  <p:column style="font-weight: bold;">ID:</p:column>
+                  <p:column colspan="5">#{item.activityid}</p:column>
+                </p:row>
 
-            <p:row>
-              <p:column style="font-weight: bold;">Venue:</p:column>
-              <p:column colspan="5">#{item.venue}</p:column>
-            </p:row>
+                <p:row>
+                  <p:column style="font-weight: bold;">Programme Time Slot:</p:column>
+                  <p:column colspan="5">#{periodBean.getPeriodLabel(item.period)}</p:column>
+                </p:row>
+                <p:row>
+                  <p:column style="font-weight: bold;">Venue:</p:column>
+                  <p:column colspan="5">#{item.venue}</p:column>
+                </p:row>
 
-            <p:row>
-              <p:column style="font-weight: bold;">Description:</p:column>
-              <p:column colspan="5">#{item.description}</p:column>
-            </p:row>
+                <p:row>
+                  <p:column style="font-weight: bold;">Description:</p:column>
+                  <p:column colspan="5">#{item.description}</p:column>
+                </p:row>
 
-            <p:row>
-              <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventnotes}:</p:column>
-              <p:column colspan="5">#{item.notes}</p:column>
-            </p:row>
+                <p:row>
+                  <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventnotes}:</p:column>
+                  <p:column colspan="5">#{item.notes}</p:column>
+                </p:row>
 
-            <p:row>
-              <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventnotesleader}:</p:column>
-              <p:column colspan="5">#{item.leaderNotes}</p:column>
-            </p:row>
+                <p:row>
+                  <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventnotesleader}:</p:column>
+                  <p:column colspan="5">#{item.leaderNotes}</p:column>
+                </p:row>
 
-            <p:row>
-              <p:column style="font-weight: bold;">Committee Member:</p:column>
-              <p:column colspan="5">#{item.committeeMember.firstname} #{item.committeeMember.surname}</p:column>
-            </p:row>
+                <p:row>
+                  <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_eventrestrictions}:</p:column>
+                  <p:column colspan="5">#{item.restrictions}</p:column>
+                </p:row>
 
-            <p:row>
-              <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_organiser}:</p:column>
-              <p:column colspan="5">
-                <ui:repeat value="#{item.organisers}" var="o" >
-                  <h:outputText value="#{o.firstname} #{o.surname}" />
-                  <h:outputText rendered="#{not empty o.email}" value=" e:#{o.email}" />
-                  <h:outputText rendered="#{not empty o.phone}" value=" p:#{o.phone}" />
-                  <br/>
-                </ui:repeat>
-              </p:column>
-            </p:row>
+                <p:row>
+                  <p:column style="font-weight: bold;">Committee Member:</p:column>
+                  <p:column colspan="5">#{item.committeeMember.firstname} #{item.committeeMember.surname}</p:column>
+                </p:row>
 
-          </p:panelGrid>
-        </p:rowExpansion>
+                <p:row>
+                  <p:column style="font-weight: bold;">#{bundle.ListEventTypeTitle_organiser}:</p:column>
+                  <p:column colspan="5">
+                    <ui:repeat value="#{item.organisers}" var="o" >
+                      <h:outputText value="#{o.firstname} #{o.surname}" />
+                      <h:outputText rendered="#{not empty o.email}" value=" e:#{o.email}" />
+                      <h:outputText rendered="#{not empty o.phone}" value=" p:#{o.phone}" />
+                      <br/>
+                    </ui:repeat>
+                  </p:column>
+                </p:row>
 
-        <f:facet name="footer">
-          <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{activityView.prepareCreate(theDay)}" update=":EventTypeCreateDlg" oncomplete="PF('EventTypeCreateDialog').show()"/>
-          <p:menuButton id="moveButton" value="Move To" disabled="#{empty theDay.selected}" >
-            <p:menuitem value="Monday" disabled="#{theDay.dayNumber == 1}" update="datalist" actionListener="#{activityView.moveSelected(1)}" />
-            <p:menuitem value="Tuesday" disabled="#{theDay.dayNumber == 2}" update="datalist" actionListener="#{activityView.moveSelected(2)}" />
-            <p:menuitem value="Wednesday" disabled="#{theDay.dayNumber == 3}" update="datalist" actionListener="#{activityView.moveSelected(3)}"/>
-            <p:menuitem value="Thursday" disabled="#{theDay.dayNumber == 4}" update="datalist" actionListener="#{activityView.moveSelected(4)}"/>
-            <p:menuitem value="Friday" disabled="#{theDay.dayNumber == 5}" update="datalist" actionListener="#{activityView.moveSelected(5)}"/>
-            <p:menuitem value="Unassigned" disabled="#{theDay.dayNumber == 6}" update="datalist" actionListener="#{activityView.moveSelected(6)}"/>
-          </p:menuButton>
-          <p:commandButton id="copyButton"   icon="ui-icon-copy"   value="Copy" actionListener="#{activityView.prepareCopy(theDay)}" update=":EventTypeCreateDlg" oncomplete="PF('EventTypeCreateDialog').show()" disabled="#{empty theDay.selected}"/>
-          <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventTypeEditForm" oncomplete="PF('EventTypeEditDialog').show()" disabled="#{empty theDay.selected}"/>
-          <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{activityView.deleteSelected}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty theDay.selected}"/>
-          <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{activityView.refresh}" update="datalist" />
-        </f:facet>
+              </p:panelGrid>
+            </p:rowExpansion>
 
-      </p:dataTable>
-      <!--/p:panel-->
-    </h:form>
+            <f:facet name="footer">
+              <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{activityView.prepareCreate(theDay)}" update=":EventTypeCreateDlg" oncomplete="PF('EventTypeCreateDialog').show()"/>
+              <p:menuButton id="moveButton" value="Move To" disabled="#{empty theDay.selected}" >
+                <p:menuitem value="Monday" disabled="#{theDay.dayNumber == 1}" update="datalist" actionListener="#{activityView.moveSelected(1)}" />
+                <p:menuitem value="Tuesday" disabled="#{theDay.dayNumber == 2}" update="datalist" actionListener="#{activityView.moveSelected(2)}" />
+                <p:menuitem value="Wednesday" disabled="#{theDay.dayNumber == 3}" update="datalist" actionListener="#{activityView.moveSelected(3)}"/>
+                <p:menuitem value="Thursday" disabled="#{theDay.dayNumber == 4}" update="datalist" actionListener="#{activityView.moveSelected(4)}"/>
+                <p:menuitem value="Friday" disabled="#{theDay.dayNumber == 5}" update="datalist" actionListener="#{activityView.moveSelected(5)}"/>
+                <p:menuitem value="Unassigned" disabled="#{theDay.dayNumber == 6}" update="datalist" actionListener="#{activityView.moveSelected(6)}"/>
+              </p:menuButton>
+              <p:commandButton id="copyButton"   icon="ui-icon-copy"   value="Copy" actionListener="#{activityView.prepareCopy(theDay)}" update=":EventTypeCreateDlg" oncomplete="PF('EventTypeCreateDialog').show()" disabled="#{empty theDay.selected}"/>
+              <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":EventTypeEditForm" oncomplete="PF('EventTypeEditDialog').show()" disabled="#{empty theDay.selected}"/>
+              <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{activityView.deleteSelected}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty theDay.selected}"/>
+              <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{activityView.refresh}" update="datalist" />
+              <p:commandButton ajax="false" id="exportButton" icon="ui-icon-document-b"  value="Export" actionListener="#{activityView.export}" update="datalist" />
+            </f:facet>
 
+          </p:dataTable>
+          <!--/p:panel-->
+        </h:form>
+      </div>
+    </div>
     <ui:include src="Create.xhtml"/>
     <ui:include src="Edit.xhtml"/>
 

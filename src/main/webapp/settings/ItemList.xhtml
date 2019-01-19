@@ -36,7 +36,7 @@
         <p:ajax event="rowSelect"   update="createButton editButton deleteButton"/>
         <p:ajax event="rowUnselect" update="createButton editButton deleteButton"/>
 
-        <p:column filterMatchMode="contains" sortBy="#{item.name}" style="width:80%">
+        <p:column filterMatchMode="contains" sortBy="#{item.name}" style="width:40%">
           <f:facet name="header">
             <h:outputText value="Name"/>
           </f:facet>
@@ -46,9 +46,15 @@
           <f:facet name="header">
             <h:outputText value="Cost"/>
           </f:facet>
-          <h:outputText value="#{item.cost}">
+          <h:outputText value="#{item.cost}" style="width:40%">
             <f:convertNumber currencySymbol="£" minFractionDigits="2" type="currency" />
           </h:outputText>
+        </p:column>
+        <p:column >
+          <f:facet name="header">
+            <h:outputText value="Import Key"/>
+          </f:facet>
+          <h:outputText value="#{item.reportKey}"/>
         </p:column>
 
         <f:facet name="footer">

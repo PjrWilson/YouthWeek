@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+
+    <ui:define name="title">
+      <h:outputText value="#{bundle.ListEventTypeTitle}"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+
+            <h:form>
+
+              <p:tabView orientation="top">
+        <p:tab title="Monday">
+          <ui:include src="ActivityList.xhtml"/>
+        </p:tab>
+        <p:tab title="Tuesday">
+          <h:panelGrid columns="2" cellpadding="10">
+                <p:graphicImage name="demo/images/godfather/godfather2.jpg" />
+                <h:outputText value="Francis Ford Coppola's legendary continuation and sequel to his landmark 1972 film, The_Godfather, parallels the young Vito Corleone's rise with his son Michael's spiritual fall, deepening The_Godfather's depiction of the dark side of the American dream. 
+                In the early 1900s, the child Vito flees his Sicilian village for America after the local Mafia kills his family. Vito struggles to make a living, legally or illegally, for his wife and growing brood in Little Italy, 
+                killing the local Black Hand Fanucci after he demands his customary cut of the tyro's business. With Fanucci gone, Vito's communal stature grows." />
+            </h:panelGrid>
+        </p:tab>
+        <p:tab title="Wednesday">
+          <ui:include src="ActivityList.xhtml"/>
+        </p:tab>
+        <p:tab title="Thursday">
+          
+        </p:tab>
+        <p:tab title="Friday">
+          
+        </p:tab>
+      </p:tabView>
+            </h:form>
+    </ui:define>
+  </ui:composition>
+
+</html>

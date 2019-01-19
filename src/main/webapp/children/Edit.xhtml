@@ -16,7 +16,7 @@
             <p:outputLabel value="#{bundle.CreateContactLabel_surname}" for="surname" />
             <p:inputText size="55" maxlength="45" id="surname" value="#{childView.selected.surname}" title="#{bundle.CreateChildTitle_surname}" required="true" requiredMessage="#{bundle.CreateChildRequiredMessage_surname}" />
             <p:outputLabel value="Date Of Birth" for="dob" />
-            <p:calendar id="dob" value="#{childView.selected.dateOfBirth}" navigator="true" yearRange="-20:-4" required="true" mask="true" pattern="dd/MM/yy" locale="en_GB" timeZone="Europe/London"/>
+            <p:calendar id="dob" value="#{childView.selected.dateOfBirth}" navigator="true" yearRange="-20:-4" required="true" mask="true" pattern="dd/MM/yy" locale="en_GB" timeZone="GMT"/>
             <p:outputLabel value="Medical Conditions" for="notes" />
             <p:inputTextarea id="notes" value="#{childView.selected.medicalInfo}" rows="5" cols="40" maxlength="256" autoResize="false" />
             <p:outputLabel value="Special Needs" for="special" />
@@ -52,7 +52,7 @@
           <p:commandButton styleClass="dlgButton" 
                            value="#{bundle.Cancel}" 
                            immediate="true" 
-                           onclick="ChildEditDialog.hide()"/>
+                           onclick="PF('ChildEditDialog').hide()"/>
         </h:panelGroup>
       </h:form>
     </p:dialog>

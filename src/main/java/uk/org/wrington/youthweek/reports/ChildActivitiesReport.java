@@ -94,7 +94,22 @@ public class ChildActivitiesReport implements Serializable {
         public int compare(Object o1, Object o2) {
           ActivityEntry ae1 = (ActivityEntry) o1;
           ActivityEntry ae2 = (ActivityEntry) o2;
-          return ae1.getActivity().getStartTime().compareTo(ae2.getActivity().getStartTime());
+          
+          // Times might not be set.
+          if (ae1.getActivity().getStartTime() != null &&
+                  ae2.getActivity().getStartTime() != null) {
+            return ae1.getActivity().getStartTime().compareTo(ae2.getActivity().getStartTime());
+          }
+          
+          if (ae1.getActivity().getStartTime() != null) {
+            return -1;
+          }
+          
+          if (ae2.getActivity().getStartTime() != null) {
+            return 1;
+          }
+          
+          return 0;
         }
       });
 

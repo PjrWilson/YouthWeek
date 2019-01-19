@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+  <ui:composition template="/template.xhtml">
+
+
+    <ui:define name="title">
+      <h:outputText value="Import Bookings"></h:outputText>
+    </ui:define>
+
+    <ui:define name="body">
+      <div class="ui-g">        
+        <div class="ui-g-12">
+
+          <h:form>
+            <p:fileUpload fileUploadListener="#{bookingImportView.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                          multiple="false" update="growl,:ImportListForm" fileLimit="100" allowTypes="/(\.|\/)(csv)$/" />
+
+          </h:form>
+        </div>
+      </div>
+      <div class="ui-g">        
+        <div class="ui-g-12">
+
+          <h:form id="ImportListForm">
+
+            <p:dataTable 
+              id="datalist" value="#{bookingImportView.importedBookings}" var="item"
+              selectionMode="single" selection="#{bookingImportView.selected}"
+              paginator="true"
+              paginatorPosition="bottom"
+              rowKey="#{item.sheetId}"
+              rows="25"
+              rowsPerPageTemplate="10,15,20,25,30,40,50"
+              sortBy="#{item.sheetId}"
+              emptyMessage="No Import Items"
+              resizableColumns="true"
+              currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
+              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+              >
+              <f:facet name="header">
+                Imported Booking Sheets (Count: #{fn:length(bookingImportView.importedBookings)})
+              </f:facet>
+              <p:ajax event="rowSelect"   update="deleteButton"/>
+              <p:ajax event="rowUnselect" update="deleteButton"/>
+
+              <p:column style="width:16px">
+                <p:rowToggler />
+              </p:column>
+              <p:column style="width:100px;text-align: left" sortBy="#{item.sheetId}" >
+                <f:facet name="header">
+                  <h:outputText value="Sheet ID"/>
+                </f:facet>
+                <h:outputText value="#{item.sheetId}"/>
+              </p:column>
+              <p:column style="text-align: left" >
+                <f:facet name="header">
+                  <h:outputText value="Num. Activities"/>
+                </f:facet>
+                <h:outputText value="#{fn:length(item.bookedActivities)}"/>
+              </p:column>
+              <!--p:column>
+                <f:facet name="header">
+                  <h:outputText value="Child"/>
+                </f:facet>
+                
+                           <p:autoComplete id="child" 
+                            dropdown="true"
+                            value="#{bookingImportView.selected.child}" 
+                            completeMethod="#{childController.completeChild}"
+                            var="c" 
+                            itemLabel="#{c.toString()}" 
+                            itemValue="#{c}" 
+                            converter="childConverter" 
+                            forceSelection="true"
+                            styleClass="contactAutoSel"
+                            emptyMessage="No matching Child"
+                            inputStyle="width:92%"
+                            style="width: 95%" 
+                            scrollHeight="400">
+              <p:column style="width:100%">
+                <h:outputText value="#{c.toString()}"/>
+              </p:column>
+            </p:autoComplete>
+ 
+              </p:column-->
+              
+              <p:rowExpansion>
+                <p:panelGrid>
+                    <p:row>
+                      <p:column style="font-weight: bold;" colspan="5">
+                        Monday: #{item.getActivities(1)}
+                      </p:column>
+                    </p:row>
+                    <p:row>
+                      <p:column style="font-weight: bold;" colspan="5">
+                        Tuesday: #{item.getActivities(2)}
+                      </p:column>
+                    </p:row>
+                    <p:row>
+                      <p:column style="font-weight: bold;" colspan="5">
+                        Wednesday: #{item.getActivities(3)}
+                      </p:column>
+                    </p:row>
+                    <p:row>
+                      <p:column style="font-weight: bold;" colspan="5">
+                        Thursday: #{item.getActivities(4)}
+                      </p:column>
+                    </p:row>
+                    <p:row>
+                      <p:column style="font-weight: bold;" colspan="5">
+                        Friday: #{item.getActivities(5)}
+                      </p:column>
+                    </p:row>
+                    <p:row>
+                      <p:column style="font-weight: bold;" colspan="5">
+                        Unmatched: #{item.getActivities(6)}
+                      </p:column>
+                    </p:row>
+
+                </p:panelGrid>
+              </p:rowExpansion>
+
+              <f:facet name="footer">
+                <p:commandButton id="deleteAllButton" icon="ui-icon-trash"  value="Delete All" actionListener="#{bookingImportView.deleteAll}" update=":growl,datalist"/>
+                <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{bookingImportView.deleteSelected}" update=":growl,datalist" disabled="#{empty bookingImportView.selected}"/>
+                <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{bookingImportView.refresh}" update="datalist" />
+              </f:facet>
+
+            </p:dataTable>
+            <!--/p:panel-->
+          </h:form>
+        </div>
+      </div>
+    </ui:define>
+
+  </ui:composition>
+
+</html>

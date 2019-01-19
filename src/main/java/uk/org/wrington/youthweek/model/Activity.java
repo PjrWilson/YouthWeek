@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
   @NamedQuery(name = "Activity.findAll", query = "SELECT e FROM Activity e"),
   @NamedQuery(name = "Activity.findAllSorted", query = "SELECT e FROM Activity e ORDER BY e.activityday"),
+  @NamedQuery(name = "Activity.findForExport", query = "SELECT e FROM Activity e WHERE e.period = :activityPeriod ORDER BY e.name"),
   @NamedQuery(name = "Activity.withTransport", query = "SELECT e FROM Activity e WHERE e.activityday = :activityday AND e.travelTimeRequired = TRUE ORDER BY e.startTime"),
   @NamedQuery(name = "Activity.findForYearSorted", query = "SELECT e FROM Activity e WHERE e.activityday < 6 AND e.minyear <= :year AND e.maxyear >= :year ORDER BY e.activityday"),
   @NamedQuery(name = "Activity.findByDay", query = "SELECT e FROM Activity e WHERE e.activityday = :activityday ORDER BY e.startTime ASC, e.name ASC"),
@@ -103,10 +104,20 @@ public class Activity implements Serializable {
   @ManyToOne
   private Contact committeeMember;
 
+  @Lob
+  @Size(max = 256)
+  @Column(name = "RESTRICTIONS")
+  private String restrictions;
+
+  @Column(name = "TIMEPERIOD")
+  private Integer period;
+ 
   public Activity() {
+    this.period = 0;
   }
 
   public Activity(Integer activityid) {
+    this.period = 0;
     this.activityid = activityid;
   }
 
@@ -169,6 +180,10 @@ public class Activity implements Serializable {
     travelTimeRequired = b;
     if (travelTimeRequired == null) {
       travelTimeRequired = Boolean.FALSE;
+    }
+    if (travelTimeRequired.equals(Boolean.FALSE)) {
+      activityStartTime = null;
+      activityEndTime = null;
     }
   }
 
@@ -288,7 +303,23 @@ public class Activity implements Serializable {
   public void setConsentRequired(Boolean b) {
     this.consentRequired = b;
   }
-
+  
+  public void setRestrictions(String restrictions) {
+    this.restrictions = restrictions;
+  }
+  
+  public String getRestrictions() {
+    return restrictions;
+  }
+  
+  public void setPeriod(Integer period) {
+    this.period = period;
+  }
+  
+  public Integer getPeriod() {
+    return period;
+  }
+  
 //  public void setEventmaxyear(String maxYear) {
 //    if (maxYear.equalsIgnoreCase("any")) {
 //      setEventmaxyear(99);

@@ -49,6 +49,14 @@ public class YwNameHelper implements Serializable {
     return s;
   }
 
+  public String formatContactNameWithEmergencyTelAndEmail(Contact c) {
+    String s = formatContactNameWithEmergencyTel(c);
+    if (s.length() > 0) {
+      s += " email:" + ((c.getEmail().length() > 0) ? c.getEmail() : "n/a");
+    }
+    return s;
+  }
+
   public String formatContactName(Contact c, boolean includeTel) {
     String s = formatContactName(c);
     if (includeTel && s.length() > 0 && c.getPhone().length() > 0) {

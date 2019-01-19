@@ -25,6 +25,25 @@ and open the template in the editor.
       </p:row>
       <p:row>
         <p:column>
+          <p:outputLabel for="period" value="#{bundle.CreateEventTypeLabel_period}" />
+        </p:column>
+        <p:column>
+          <p:selectOneMenu id="period" 
+                           effect="fade"
+                           value="#{theActivity.period}" 
+                           converter="periodConverter"
+                           var="y"
+                           style="width:125px">
+            <f:selectItems value="#{periodBean.periodValues}" var="p"
+                           itemLabel="#{periodBean.getPeriodLabel(p)}" itemValue="#{p}"/>
+            <p:column>
+              #{periodBean.getPeriodLabel(y)}
+            </p:column>
+          </p:selectOneMenu>
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
           <p:outputLabel value="Drop Off Time" for="starttime" />
         </p:column>
         <p:column>
@@ -141,6 +160,14 @@ and open the template in the editor.
         </p:column>
         <p:column>
           <p:inputTextarea id="eventnotesleader" value="#{theActivity.leaderNotes}" rows="4" cols="50" maxlength="256" autoResize="false" />
+        </p:column>
+      </p:row>
+      <p:row>
+        <p:column>
+          <p:outputLabel value="#{bundle.CreateEventTypeLabel_eventrestrictions}" for="eventvenue" />
+        </p:column>
+        <p:column>
+          <p:inputTextarea id="eventrestrictions" value="#{theActivity.restrictions}" rows="4" cols="50" maxlength="256" autoResize="false" />
         </p:column>
       </p:row>
       <p:row>

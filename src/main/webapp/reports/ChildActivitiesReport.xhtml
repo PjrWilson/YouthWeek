@@ -99,14 +99,24 @@ and open the template in the editor.
 
                           <ui:repeat value="#{ccont.getActivities(day)}" var="info">
                             <div class="tableRow" style="border-top:0px">
-                              <div class="tableCol"> 
-                                <h:outputText value="#{info.activity.startTime}">
-                                  <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
-                                </h:outputText>
+                              <div class="tableCol">
+                                <h:panelGroup >
+                                  <h:outputText rendered="#{info.activity.startTime != null}" value="#{info.activity.startTime}">
+                                    <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+                                  </h:outputText>
+                                  <h:panelGroup style="background-color: yellow" rendered="#{info.activity.startTime == null}">
+                                    <b>NO START TIME</b>
+                                  </h:panelGroup>
+                                </h:panelGroup>
                                 -
-                                <h:outputText value="#{info.activity.endTime}">
-                                  <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
-                                </h:outputText>
+                                <h:panelGroup >
+                                  <h:outputText rendered="#{info.activity.endTime != null}" value="#{info.activity.endTime}">
+                                    <f:convertDateTime type="time" timeStyle="short" timeZone="Europe/London"/>
+                                  </h:outputText>
+                                  <h:panelGroup style="background-color: yellow" rendered="#{info.activity.endTime == null}">
+                                    <b>NO END TIME</b>
+                                  </h:panelGroup>
+                                </h:panelGroup>
                               </div>
                               <div class="tableCol">
                                 <h:outputText value="#{ywNameHelper.formatActivityNameWithVenue(info.activity)}">

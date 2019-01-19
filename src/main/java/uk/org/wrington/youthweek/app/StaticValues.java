@@ -6,6 +6,7 @@
 package uk.org.wrington.youthweek.app;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -21,7 +22,9 @@ public class StaticValues {
   private static final String WEDNESDAY = "Wednesday";
   private static final String THURSDAY = "Thursday";
   private static final String FRIDAY = "Friday";
-
+  private static final List<String> periodLabels = Arrays.asList("Morning", "Afternoon", "Evening", "All Day", "Morning & Afternoon", "Aftornoon & Evening");
+  private static List<Integer> periodValues = new LinkedList<>();
+  
   public static List<Integer> getMinSchoolYears() {
     return minSchoolYears;
   }
@@ -50,6 +53,31 @@ public class StaticValues {
     return label;
   }
 
+  public static String getPeriodLabel(Integer in) {
+    if (in != null && in >= 0) {
+      return periodLabels.get(in);
+    }
+    return "Not Set";
+  }
+  
+  public static int getPeriodIndex(String in) {
+    return periodLabels.indexOf(in);
+  }
+  
+  public static List<Integer> getPeriodValues() {
+    if (periodValues.isEmpty()) {
+      int index = 0;
+      for (String s : getPeriodLabels()) {
+        periodValues.add(index++);
+      }
+    }
+    return periodValues;
+  }
+
+  public static List<String> getPeriodLabels() {
+    return periodLabels;
+  }
+  
   public static String getYearLabel(Integer in) {
     
     String label = "";

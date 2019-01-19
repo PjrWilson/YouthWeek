@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:fn="http://java.sun.com/jsp/jstl/functions" >
+
+  <h:head>
+    <title>Select Sheet Number</title>
+    <style type="text/css">
+      .ui-widget {
+        font-size: 90%;
+      }
+    </style>
+  </h:head>
+
+  <h:body>
+    <h:form>
+      <!--p:dataTable var="impt" value="#{bookingImportView.importedBookings}">
+        <p:column headerText="Id" filterBy="#{impt.sheetId}" filterMatchMode="contains" sortBy="#{impt.sheetId}">
+          <h:outputText value="#{impt.sheetId}" />
+        </p:column>
+
+        <p:column headerText="Activities">
+          <h:outputText value="#{fn:length(impt.bookedActivities)}" />
+        </p:column>
+
+        <p:column style="width:32px;text-align: center">
+        </p:column>
+      </p:dataTable-->
+
+
+      <h:panelGrid columns="3">
+        <p:outputLabel for="val" value="Sheet Number" />
+        <p:inputText id="val" value="#{childView.sheet}" />
+        <p:commandButton value="Select" actionListener="#{childView.selectImportFromDialog()}" />
+      </h:panelGrid>
+
+
+    </h:form>
+  </h:body>
+
+</html>

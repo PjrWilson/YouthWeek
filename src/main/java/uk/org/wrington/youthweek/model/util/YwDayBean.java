@@ -13,6 +13,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import uk.org.wrington.youthweek.app.StaticValues;
+import uk.org.wrington.youthweek.model.Child;
 import uk.org.wrington.youthweek.settings.Settings;
 
 /**
@@ -54,6 +55,23 @@ public class YwDayBean implements Serializable {
     return "";
   }
 
+   public String getExportDayDate(int dayNumber) {
+    if (settings != null) {
+      Calendar c
+              = DateHelper.getInstance().getCalendar(settings.getStartDate());
+      c.add(Calendar.DAY_OF_YEAR, dayNumber - 1);
+      return DateHelper.getInstance().formatDate("dd/MM/YYYY", c);
+    }
+    return "";
+  }
+
+   public int getYearForChild(Child c) {
+     if (settings != null) {
+       return settings.getSchoolYearFor(c, 0);
+     }
+     return 0;
+   }
+   
   public String getDayNameAndDate(int dayNumber) {
     return StaticValues.getDayLabel(dayNumber) + " " + getDayDate(dayNumber);
   }

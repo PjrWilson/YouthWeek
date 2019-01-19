@@ -21,8 +21,10 @@
               <f:convertNumber maxFractionDigits="2"
                                type="number" />
             </p:inputText>
+            <p:outputLabel value="Report Key" for="key" />
+            <p:inputText size="70" maxlength="40" id="key" required="true" value="#{theItem.reportKey}" title="Report Key" requiredMessage="Report Key value needed" />
           </p:panelGrid>
-          <p:commandButton styleClass="dlgButton" actionListener="#{settingsView.update}" process='itemname, itemcost, @this' value="#{bundle.Save}" update="display,:extrasForm:datalist,:growl" oncomplete="handleSubmit(args, 'ItemEditDialog');"/>
+          <p:commandButton styleClass="dlgButton" actionListener="#{settingsView.update}" process='itemname, itemcost, key, @this' value="#{bundle.Save}" update="display,:extrasForm:datalist,:growl" oncomplete="handleSubmit(args, 'ItemEditDialog');"/>
           <p:commandButton styleClass="dlgButton" value="#{bundle.Cancel}" immediate="true" onclick="ItemEditDialog.hide()"/>
         </h:panelGroup>
       </h:form>

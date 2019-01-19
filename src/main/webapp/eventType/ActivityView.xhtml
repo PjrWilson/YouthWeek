@@ -16,6 +16,7 @@
 
     <ui:define name="body">
 
+      <!--
       <p:panelGrid style="width: 100%" styleClass="panelColumns">
 
           <p:row>
@@ -32,9 +33,7 @@
                   <p:ajax event="rowSelect"   update=":ActivityListForm"/>
                   <p:ajax event="rowUnselect" update=":ActivityListForm"/>
 
-                  <p:column>
-                    <h:outputText value="#{day.dayName}"/>
-                  </p:column>
+                  <p:column>#{day.dayName}</p:column>
                 </p:dataTable>
               </h:form>
             </p:column>
@@ -44,7 +43,10 @@
 
           </p:row>
         </p:panelGrid>
+      -->
+              <ui:include src="ActivityList.xhtml" />
     </ui:define>
+    
   </ui:composition>
 
 </html>

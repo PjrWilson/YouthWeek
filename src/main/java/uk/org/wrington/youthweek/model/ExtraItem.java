@@ -47,6 +47,9 @@ public class ExtraItem implements Serializable {
   private String description;
   @Column(name = "COST")
   private Double cost = 0.0;
+  @Size(max = 45)
+  @Column(name = "REPORTKEY")
+  private String reportKey;
 
   public ExtraItem() {
   }
@@ -87,6 +90,14 @@ public class ExtraItem implements Serializable {
     this.cost = cost;
   }
 
+  public void setReportKey(String key) {
+    this.reportKey = key;
+  }
+  
+  public String getReportKey() { 
+    return reportKey;
+  }
+  
   @Override
   public int hashCode() {
     int hash = 0;

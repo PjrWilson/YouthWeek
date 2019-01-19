@@ -7,6 +7,7 @@ package uk.org.wrington.youthweek.controller;
 
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -65,7 +66,7 @@ public class ChildController implements Serializable {
   protected void initializeEmbeddableKey() {
   }
 
-  private ChildFacade getFacade() {
+  public ChildFacade getFacade() {
     return ejbFacade;
   }
 
@@ -205,6 +206,20 @@ public class ChildController implements Serializable {
       }
     }
 
+  }
+
+    public List<Child> completeChild(String query) {
+    List<Child> allChildren = getItems();
+    List<Child> retChildren = new ArrayList<>();
+
+    String queryLower = query.toLowerCase();
+    for (Child child : allChildren) {
+      if (child.toString().toLowerCase().contains(queryLower)) {
+        retChildren.add(child);
+      }
+    }
+
+    return retChildren;
   }
 
 }

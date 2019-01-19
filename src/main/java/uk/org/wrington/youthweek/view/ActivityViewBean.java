@@ -5,8 +5,10 @@
  */
 package uk.org.wrington.youthweek.view;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -14,10 +16,15 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import uk.org.wrington.youthweek.controller.ActivityController;
+import uk.org.wrington.youthweek.export.ActivityExportGenerator;
 import uk.org.wrington.youthweek.model.Activity;
 import uk.org.wrington.youthweek.model.util.CopyUtil;
 import uk.org.wrington.youthweek.model.util.DateHelper;
+import uk.org.wrington.youthweek.model.util.JsfUtil;
+import uk.org.wrington.youthweek.model.util.YwDayBean;
 import uk.org.wrington.youthweek.settings.Settings;
 
 /**
@@ -34,10 +41,14 @@ public class ActivityViewBean implements Serializable {
 
   // List of Day entries.
   private final List<ActivityViewDay> activityDays = new ArrayList<>();
-  private ActivityViewDay selectedDay = null;
+  private int dayValue = 0;
+//  private ActivityViewDay selectedDay = null;
   private Activity created = null;
   @ManagedProperty(value = "#{settings}")
   private Settings settings;
+  @ManagedProperty(value = "#{ywDayBean}")
+  private YwDayBean ywDayBean;
+
 
   @PostConstruct
   public void init() {
@@ -46,9 +57,24 @@ public class ActivityViewBean implements Serializable {
       activityDays.add(new ActivityViewDay(i, activityController));
     }
     // Select first
-    setSelectedDay(activityDays.get(0));
+    setDayValue(1);
   }
 
+  public int getDayValue() {
+    return dayValue;
+  }
+  
+  public void setDayValue(int dayValue) {
+    System.out.println("Set Day Value to " + dayValue);
+    // Make sure there's a change
+    if (this.dayValue != dayValue) {
+      this.dayValue = dayValue;
+      // Make sure activities are set.
+      ActivityViewDay selectedDay = getSelectedDay();
+      selectedDay.setActivities(activityController.getActivitiesForDay(selectedDay.getDayNumber()));
+    }
+  }
+  
   public void setActivityController(ActivityController ac) {
     this.activityController = ac;
   }
@@ -61,23 +87,27 @@ public class ActivityViewBean implements Serializable {
     this.settings = s;
   }
 
+  public void setYwDayBean(YwDayBean ywDayBean) {
+    this.ywDayBean = ywDayBean;
+  }
+
   // Get the days list.
   public List<ActivityViewDay> getActivityDays() {
     return activityDays;
   }
 
   public ActivityViewDay getSelectedDay() {
-    return selectedDay;
+    return activityDays.get(dayValue-1);
   }
 
-  public void setSelectedDay(ActivityViewDay day) {
-    // Make sure there's a change
-    if (!day.equals(selectedDay)) {
-      selectedDay = day;
-      // Make sure activities are set.
-      selectedDay.setActivities(activityController.getActivitiesForDay(selectedDay.getDayNumber()));
-    }
-  }
+//  public void setSelectedDay(ActivityViewDay day) {
+//    // Make sure there's a change
+//    if (!day.equals(selectedDay)) {
+//      selectedDay = day;
+//      // Make sure activities are set.
+//      selectedDay.setActivities(activityController.getActivitiesForDay(selectedDay.getDayNumber()));
+//    }
+//  }
 
   public void prepareCreate(ActivityViewDay day) {
     System.out.println("ActivtyDayView:prepareCreate");
@@ -98,6 +128,7 @@ public class ActivityViewBean implements Serializable {
   }
 
   public void deleteSelected() {
+    ActivityViewDay selectedDay = getSelectedDay();
     if (selectedDay != null) {
       Activity activity = selectedDay.getSelected();
       activityController.destroy(activity);
@@ -106,7 +137,7 @@ public class ActivityViewBean implements Serializable {
       selectedDay.setActivities(activityController.getActivitiesForDay(selectedDay.getDayNumber()));
     }
   }
-  
+
   public void finaliseCreate() {
     if (created != null) {
       ActivityViewDay day = activityDays.get(created.getActivityDay() - 1);
@@ -118,12 +149,12 @@ public class ActivityViewBean implements Serializable {
   }
 
   public void update() {
-    activityController.update(selectedDay.getSelected());
+    activityController.update(getSelectedDay().getSelected());
   }
 
   public void moveSelected(Integer newDay) {
     // Get the selected item in the selected day.
-    Activity a = selectedDay.getSelected();
+    Activity a = getSelectedDay().getSelected();
 
     // Check day is within range
     if (newDay >= 1 && newDay <= 6) {
@@ -141,15 +172,15 @@ public class ActivityViewBean implements Serializable {
         activityController.update(a);
         // Reset activities for current day.
         //selectedDay.setActivities(activityController.getActivitiesForDay(selectedDay.getDayNumber()));
-        selectedDay.getActivities().remove(a);
-        selectedDay.setSelected(null);
+        getSelectedDay().getActivities().remove(a);
+        getSelectedDay().setSelected(null);
       }
     }
   }
 
   public String getDayDate() {
-    int dayNo = selectedDay.getDayNumber();
-    System.out.println("getDayDate for " + selectedDay.getDayName());
+    int dayNo = getSelectedDay().getDayNumber();
+    System.out.println("getDayDate for " + getSelectedDay().getDayName());
     if (dayNo >= 1 && dayNo <= 5) {
       Calendar c = DateHelper.getInstance().getCalendar(settings.getStartDate());
       // Add day - 1.
@@ -161,8 +192,41 @@ public class ActivityViewBean implements Serializable {
 
   public void refresh() {
     // Update selected.
-    if (selectedDay != null) {
-      selectedDay.setActivities(activityController.getActivitiesForDay(selectedDay.getDayNumber()));
+    if (getSelectedDay() != null) {
+      getSelectedDay().setActivities(activityController.getActivitiesForDay(getSelectedDay().getDayNumber()));
     }
+  }
+
+  public void export() throws IOException {
+    System.out.println("Export Activities");
+
+    FacesContext fc = FacesContext.getCurrentInstance();
+    ExternalContext ec = fc.getExternalContext();
+
+    ActivityExportGenerator export = 
+            new ActivityExportGenerator(ywDayBean,
+            activityController.getFacade());
+    StringBuilder sb = export.generate();
+    
+    String fileName = export.getFilename();
+    int contentLength = sb.length();
+
+    ec.responseReset(); // Some JSF component library or some Filter might have set some headers in the buffer beforehand. We want to get rid of them, else it may collide.
+    ec.setResponseContentType("text/csv"); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
+    ec.setResponseContentLength(contentLength); // Set it with the file size. This header is optional. It will work if it's omitted, but the download progress will be unknown.
+    ec.setResponseHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\""); // The Save As popup magic is done here. You can give it any file name you want, this only won't work in MSIE, it will use current request URL as file name instead.
+
+    OutputStream output = ec.getResponseOutputStream();
+    PrintWriter pw = new PrintWriter(output);
+    pw.print(sb.toString());
+    pw.flush();
+    
+    fc.responseComplete(); // Important! Otherwise JSF will attempt to render the response which obviously will fail since it's already written with a file and closed.
+
+    JsfUtil.addSuccessMessage("Exported stuff");
+  }
+
+  public void dayValueChange() {
+    System.out.println("Day Value Change to " + this.dayValue);
   }
 }

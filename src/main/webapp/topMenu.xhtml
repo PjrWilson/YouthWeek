@@ -22,6 +22,7 @@ and open the template in the editor.
       <p:submenu label="#{bundle.Events}">
         <p:menuitem value="Activity Schedule" outcome="/eventType/ActivityView" icon="ui-icon-document"/>
         <p:menuitem value="Grouping" outcome="/eventType/ActivityGrouping" icon="ui-icon-transfer-e-w"/>
+        <p:menuitem value="Import Bookings" outcome="/eventType/ImportBookings" icon="ui-icon-document-b"/>
       </p:submenu>
       <p:submenu label="Reports" icon="ui-icon-document">
         <p:submenu label="Activities">
@@ -33,6 +34,7 @@ and open the template in the editor.
         <p:menuitem value="BBQ Orders/Income" outcome="/reports/BBQIncomeReport" />
         <p:submenu label="Children">
           <p:menuitem value="Contacts List" outcome="/reports/ChildContactReport" />
+          <p:menuitem value="Medical Info" outcome="/reports/ChildMedicalReport" />
           <p:menuitem value="Activities List" outcome="/reports/ChildActivitiesReport" />
           <p:menuitem value="Barbecue Tickets" outcome="/reports/ChildBarbecueTicketsReport" />
           <p:menuitem value="Missing Consent Forms" outcome="/reports/ChildConsentFormReport" />

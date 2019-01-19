@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIComponent;
@@ -30,7 +31,7 @@ import uk.org.wrington.youthweek.model.util.JsfUtil.PersistAction;
  * @author wilson_pjr
  */
 @ManagedBean(name = "activityController")
-@SessionScoped
+@ApplicationScoped
 public class ActivityController implements Serializable {
 
   @EJB
@@ -52,7 +53,7 @@ public class ActivityController implements Serializable {
   protected void initializeEmbeddableKey() {
   }
 
-  private ActivityFacade getFacade() {
+  public ActivityFacade getFacade() {
     return ejbFacade;
   }
 

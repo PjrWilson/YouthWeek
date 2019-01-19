@@ -18,7 +18,7 @@
     <dependency>
       <groupId>org.primefaces</groupId>
       <artifactId>primefaces</artifactId>
-      <version>5.3</version>
+      <version>6.2</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.persistence</groupId>
@@ -42,6 +42,11 @@
       <groupId>org.primefaces.themes</groupId>  
       <artifactId>all-themes</artifactId>  
       <version>1.0.10</version>  
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>1.5</version>
     </dependency>
  </dependencies>
 

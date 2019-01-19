@@ -15,54 +15,56 @@
     </ui:define>
 
     <ui:define name="body">
-      <h:form id="ChildListForm">
-        <p:contextMenu for="datalist">
-          <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()"/>
-          <p:menuitem icon="ui-icon-cart"   value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update="ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()"/>
-          <p:menuitem icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childView.deleteSelected}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"/>
-        </p:contextMenu>
+      <div class="ui-g">
+        <div class="ui-g-12">
+          <h:form id="ChildListForm">
+            <p:contextMenu for="datalist">
+              <p:menuitem icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()"/>
+              <p:menuitem icon="ui-icon-cart"   value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update="ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()"/>
+              <p:menuitem icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childView.deleteSelected}" rendered="#{settings.disableDelete == false}" update=":growl,datalist"/>
+            </p:contextMenu>
 
-        <p:dataTable id="datalist" 
-                     widgetVar="datalist"
-                     value="#{childView.children}" var="item"
-                     selectionMode="single" 
-                     selection="#{childView.selected}"
-                     paginator="true"
-                     paginatorPosition="bottom"
-                     rowKey="#{item.childid}"
-                     sortBy="#{item.surname}"
-                     rows="#{childView.rows}"
-                     rowsPerPageTemplate="10,15,20,25,30,40,50"
-                     currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
-                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                     >
-          <f:facet name="header">
-            Child List (Total Count: #{fn:length(childView.children)})
-          </f:facet>
-             <p:ajax event="rowSelect"   update="createButton  editButton editScheduleButton  deleteButton"/>
-          <p:ajax event="rowUnselect" update="createButton  editButton editScheduleButton deleteButton "/>
+            <p:dataTable id="datalist" 
+                         widgetVar="datalist"
+                         value="#{childView.children}" var="item"
+                         selectionMode="single" 
+                         selection="#{childView.selected}"
+                         paginator="true"
+                         paginatorPosition="bottom"
+                         rowKey="#{item.childid}"
+                         sortBy="#{item.surname}"
+                         rows="#{childView.rows}"
+                         rowsPerPageTemplate="10,15,20,25,30,40,50"
+                         currentPageReportTemplate="Displaying {startRecord} - {endRecord} of {totalRecords}, Page {currentPage}/{totalPages}"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         >
+              <f:facet name="header">
+                Child List (Total Count: #{fn:length(childView.children)})
+              </f:facet>
+              <p:ajax event="rowSelect"   update="createButton  editButton editScheduleButton importScheduleButton deleteButton"/>
+              <p:ajax event="rowUnselect" update="createButton  editButton editScheduleButton importScheduleButton deleteButton "/>
 
-          <p:column style="width:16px" styleClass="#{item.tetanusUpToDate != true ? 'noTetanus' : null}">
-            <p:rowToggler />
-          </p:column>
-          <p:column headerText="#{bundle.ListContactTitle_surname}" filterBy="#{item.surname}" filterMatchMode="contains" sortBy="#{item.surname}">
-            <h:outputText value="#{item.surname}"/>
-          </p:column>
-          <p:column headerText="#{bundle.ListContactTitle_firstname}" filterBy="#{item.firstname}" filterMatchMode="contains" sortBy="#{item.firstname}">
-            <h:outputText value="#{item.firstname}" />
-          </p:column>
-          <p:column headerText="Parent" sortBy="#{item.parentContact.surname}" styleClass="#{item.parentContact == null ? 'noTetanus' : null}">
-            <h:outputText value="#{ywNameHelper.formatContactNameWithEmergencyTel(item.parentContact)}" />
-          </p:column>
-          <p:column headerText="Date Of Birth" sortBy="#{item.dateOfBirth}" style="width: 120px">
-            <h:outputText value="#{item.dateOfBirth}" >
-              <f:convertDateTime type="date" timeZone="Europe/London"/>
-            </h:outputText>
-          </p:column>
-          <p:column headerText="School Year" sortBy="#{item.dateOfBirth}" filterBy="#{settings.getSchoolYearFor(item, 0)}" 
-                    filterFunction="#{childView.filterBySchoolYear}" style="width: 100px" filterMatchMode="equals">
-            <f:facet name="filter">
-                <p:selectOneMenu onchange="PF('datalist').filter()">
+              <p:column style="width:16px" styleClass="#{item.tetanusUpToDate != true ? 'noTetanus' : null}">
+                <p:rowToggler />
+              </p:column>
+              <p:column headerText="#{bundle.ListContactTitle_surname}" filterBy="#{item.surname}" filterMatchMode="contains" sortBy="#{item.surname}">
+                <h:outputText value="#{item.surname}"/>
+              </p:column>
+              <p:column headerText="#{bundle.ListContactTitle_firstname}" filterBy="#{item.firstname}" filterMatchMode="contains" sortBy="#{item.firstname}">
+                <h:outputText value="#{item.firstname}" />
+              </p:column>
+              <p:column headerText="Parent" sortBy="#{item.parentContact.surname}" styleClass="#{item.parentContact == null ? 'noTetanus' : null}">
+                <h:outputText value="#{ywNameHelper.formatContactNameWithEmergencyTel(item.parentContact)}" />
+              </p:column>
+              <p:column headerText="Date Of Birth" sortBy="#{item.dateOfBirth}" style="width: 120px">
+                <h:outputText value="#{item.dateOfBirth}" >
+                  <f:convertDateTime type="date" timeZone="Europe/London"/>
+                </h:outputText>
+              </p:column>
+              <p:column headerText="School Year" sortBy="#{item.dateOfBirth}" filterBy="#{ywDayBean.getYearForChild(item)}" 
+                        filterFunction="#{childView.filterBySchoolYear}" style="width: 100px" filterMatchMode="equals">
+                <f:facet name="filter">
+                  <p:selectOneMenu onchange="PF('datalist').filter()">
                     <f:converter converterId="javax.faces.Integer" />
                     <f:selectItem itemLabel="All" itemValue="-1" />
                     <f:selectItem itemLabel="KS1" itemValue="1" />
@@ -71,49 +73,56 @@
                     <f:selectItem itemLabel="KS4" itemValue="4" />
                     <f:selectItem itemLabel="KS5" itemValue="5" />
                     <f:selectItem itemLabel="N/A" itemValue="6" />
-                </p:selectOneMenu>
-            </f:facet>            
-            <h:outputText value="#{schoolYearBean.getSchoolYearLabel(settings.getSchoolYearFor(item, 0))}" />
-          </p:column>
-          <p:column headerText="Activities" filterBy="#{fn:length(item.activities)}" filterFunction="#{childView.filterByActivityCount}" style="width: 85px">
-            <f:facet name="filter">
-              <p:selectOneMenu onchange="PF('datalist').filter()">
-                <f:converter converterId="javax.faces.Integer" />
-                <f:selectItem itemLabel="All" itemValue="-1" />
-                <f:selectItem itemLabel="None" itemValue="0" />
-                <f:selectItem itemLabel="1 or more" itemValue="1" />
-              </p:selectOneMenu>
-            </f:facet>
+                  </p:selectOneMenu>
+                </f:facet>            
+                <h:outputText value="#{schoolYearBean.getSchoolYearLabel(settings.getSchoolYearFor(item, 0))}" />
+              </p:column>
+              <p:column headerText="Activities" filterBy="#{fn:length(item.activities)}" filterFunction="#{childView.filterByActivityCount}" style="width: 85px">
+                <f:facet name="filter">
+                  <p:selectOneMenu onchange="PF('datalist').filter()">
+                    <f:converter converterId="javax.faces.Integer" />
+                    <f:selectItem itemLabel="All" itemValue="-1" />
+                    <f:selectItem itemLabel="None" itemValue="0" />
+                    <f:selectItem itemLabel="1 or more" itemValue="1" />
+                  </p:selectOneMenu>
+                </f:facet>
 
-            <h:outputText value="#{fn:length(item.activities)}" />
-          </p:column>
+                <h:outputText value="#{fn:length(item.activities)}" />
+              </p:column>
 
-          <p:rowExpansion>
-            <p:panelGrid>
+              <p:rowExpansion>
+                <p:panelGrid>
 
-              <p:row>
-                <p:column style="font-weight: bold;">Medical Conditions:</p:column>
-                <p:column colspan="5">#{item.medicalInfo}</p:column>
-              </p:row>
+                  <p:row>
+                    <p:column style="font-weight: bold;">Medical Conditions:</p:column>
+                    <p:column colspan="5">#{item.medicalInfo}</p:column>
+                  </p:row>
 
-              <p:row>
-                <p:column style="font-weight: bold;">Special Needs:</p:column>
-                <p:column colspan="5">#{item.specialNeeds}</p:column>
-              </p:row>
+                  <p:row>
+                    <p:column style="font-weight: bold;">Special Needs:</p:column>
+                    <p:column colspan="5">#{item.specialNeeds}</p:column>
+                  </p:row>
 
-            </p:panelGrid>
-          </p:rowExpansion>
+                </p:panelGrid>
+              </p:rowExpansion>
 
-          <f:facet name="footer">
-            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{childView.prepareCreate}" update=":ChildCreateForm" oncomplete="PF('ChildCreateDialog').show()"/>
-            <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()" disabled="#{empty childView.selected}"/>
-            <p:commandButton id="editScheduleButton" icon="ui-icon-cart" value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" disabled="#{empty childView.selected}"/>
-            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childView.deleteSelected}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty childView.selected}"/>
-            <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{childController.refreshItems}" update="datalist" />
-          </f:facet>
-            <p:ajax event="rowDblselect"  listener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" />
-        </p:dataTable>
-      </h:form>
+              <f:facet name="footer">
+                <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{childView.prepareCreate}" update=":ChildCreateForm" oncomplete="PF('ChildCreateDialog').show()"/>
+                <p:commandButton id="editButton"   icon="ui-icon-pencil" value="#{bundle.Edit} Details" update=":ChildEditForm" oncomplete="PF('ChildEditDialog').show()" disabled="#{empty childView.selected}"/>
+                <p:commandButton id="editScheduleButton" icon="ui-icon-cart" value="#{bundle.EditSchedule}" actionListener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" disabled="#{empty childView.selected}"/>
+                <p:commandButton id="importScheduleButton" value="#{bundle.ImportSchedule}" icon="ui-icon-extlink" actionListener="#{childView.chooseSheet}" disabled="#{empty childView.selected}" >
+                  <p:ajax event="dialogReturn" listener="#{childView.onSheetChosen}" update=":growl,datalist" />
+                </p:commandButton>                
+                <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{childView.deleteSelected}" update=":growl,datalist" rendered="#{settings.disableDelete == false}" disabled="#{empty childView.selected}"/>
+                <p:commandButton id="refreshButton" icon="ui-icon-refresh"  value="Refresh" actionListener="#{childController.refreshItems}" update="datalist" />
+                <p:commandButton ajax="false" id="exportButton" icon="ui-icon-document-b"  value="Export" actionListener="#{childView.export}" update="datalist" />
+              </f:facet>
+              <p:ajax event="rowDblselect"  listener="#{scheduleEditorBean.init}" update=":ScheduleEditorDlg" oncomplete="PF('ScheduleEditorDialog').show()" />
+            </p:dataTable>
+
+          </h:form>
+        </div>
+      </div>
 
       <ui:include src="Create.xhtml"/>
       <ui:include src="Edit.xhtml"/>
