@@ -220,7 +220,11 @@ public class Activity implements Serializable {
   }
 
   public Double getCost() {
-    return cost;
+    if (cost != null)
+    {
+      return cost;
+    }
+    return new Double(0); 
   }
 
   public void setCost(Double cost) {
